@@ -1,0 +1,71 @@
+.root {
+    -fx-background-color: white;
+}
+
+.title {
+    -fx-font-family: "Arial";
+}
+
+.input-field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #1d9e9e;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.login-button {
+    -fx-background-color: #1d9e9e;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+/* Styles pour dashboard_menu.fxml */
+.top-bar {
+    -fx-background-color: #1d9e9e;
+    -fx-padding: 10px;
+}
+
+.top-bar .title {
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.logout-button {
+    -fx-background-color: white;
+    -fx-text-fill: #1d9e9e;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.sidebar {
+    -fx-background-color: #f2f2f2;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1d9e9e;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 10px 20px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.user-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-effect: null;
+    -fx-focus-traversable: false;
+}
+
+.button:hover,
+.button:pressed {
+    -fx-font-size: 15px;
+}

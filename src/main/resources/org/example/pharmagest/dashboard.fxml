@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="618.0" prefWidth="1087.0" style="-fx-background-color: #ADD8E6;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.DashboardController">
+    <children>
+        <GridPane hgap="20.0" layoutX="122.0" layoutY="40.0" prefHeight="538.0" prefWidth="928.0" vgap="20.0">
+            <columnConstraints>
+                <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints fillHeight="false" maxHeight="243.19998779296876" minHeight="10.0" prefHeight="243.19998779296876" vgrow="SOMETIMES" />
+                <RowConstraints fillHeight="false" maxHeight="161.60001220703126" minHeight="10.0" prefHeight="89.60001220703128" vgrow="SOMETIMES" />
+                <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Pane opacity="0.6" prefHeight="150.0" prefWidth="271.0" style="-fx-background-color: green; -fx-background-radius: 20;" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                    <children>
+                        <Label alignment="CENTER" layoutX="101.0" layoutY="104.0" prefHeight="32.0" prefWidth="156.0" text="Bénefice Total" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="lblBeneficeTotal" layoutX="14.0" layoutY="14.0" style="-fx-alignment: center; -fx-text-fill: white;" text="0.0 Rs">
+                            <font>
+                                <Font size="40.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane opacity="0.6" prefHeight="150.0" prefWidth="264.0" style="-fx-background-color: red; -fx-background-radius: 20;" GridPane.rowIndex="1">
+                    <children>
+                        <Label alignment="CENTER" layoutX="31.0" layoutY="14.0" text="Approvisionnement" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="23.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="lblNombreSeuil" alignment="CENTER" layoutX="125.0" layoutY="54.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="23.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="86.0" layoutY="83.0" text="à verifier" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="23.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="btnSeuil" alignment="CENTER" layoutX="178.0" layoutY="112.0" mnemonicParsing="false" onAction="#btnSeuilOnAction" style="-fx-background-color: #83c5be; -fx-background-radius: 20; -fx-cursor: hand;" text="Afficher">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </Pane>
+                <Pane prefHeight="150.0" prefWidth="264.0" style="-fx-background-color: turquoise; -fx-background-radius: 20;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                        <Button fx:id="btnRefresh" alignment="CENTER" layoutX="101.0" layoutY="66.0" mnemonicParsing="false" onAction="#btnRefreshOnAction" style="-fx-background-color: #83c5be; -fx-background-radius: 30; -fx-cursor: hand;" text="🔄" textFill="#2e8e3e">
+                            <font>
+                                <Font name="Roboto" size="26.0" />
+                            </font>
+                        </Button>
+                        <Label alignment="CENTER" layoutX="25.0" layoutY="26.0" prefHeight="32.0" prefWidth="214.0" text="Rafraichir les données" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="20.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane opacity="0.7" prefHeight="50.0" prefWidth="298.0" style="-fx-background-color: teal; -fx-background-radius: 20;" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                    <children>
+                        <Label fx:id="lblDate" alignment="CENTER" layoutX="23.0" layoutY="13.0" prefHeight="24.0" prefWidth="250.0" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto" size="20.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
+                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Pane opacity="0.6" prefHeight="150.0" prefWidth="264.0" style="-fx-background-color: blue; -fx-background-radius: 20;" GridPane.valignment="TOP">
+                    <children>
+                        <Label fx:id="lblVenteTotal" layoutX="14.0" layoutY="14.0" style="-fx-alignment: center; -fx-text-fill: white;" text="4">
+                            <font>
+                                <Font size="40.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="35.0" layoutY="106.0" prefHeight="30.0" prefWidth="214.0" text="Nombre de Vente Total" textFill="WHITE">
+                            <font>
+                                <Font name="Roboto Bold" size="20.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>

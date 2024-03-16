@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" stylesheets="@assets/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.DashboardMenuController">
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="1280.0" spacing="20.0" styleClass="top-bar" BorderPane.alignment="CENTER">
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@assets/logo.png" />
+                </image>
+                <HBox.margin>
+                    <Insets left="20.0" />
+                </HBox.margin>
+            </ImageView>
+            <Label styleClass="title" text="PHARMAGEST">
+                <font>
+                    <Font name="Arial Bold" size="36.0" />
+                </font>
+            </Label>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblUser" styleClass="user-label">
+                <font>
+                    <Font name="Arial" size="16.0" />
+                </font>
+                <HBox.margin>
+                    <Insets right="20.0" />
+                </HBox.margin>
+            </Label>
+            <Label fx:id="lblHeure" styleClass="user-label" text="12/03/2024">
+                <font>
+                    <Font name="Arial" size="16.0" />
+                </font>
+                <HBox.margin>
+                    <Insets right="20.0" />
+                </HBox.margin>
+            </Label>
+            <Button fx:id="btnLogout" layoutX="1151.0" layoutY="16.0" mnemonicParsing="false" onAction="#onLogoutClick" prefHeight="35.0" prefWidth="115.0" styleClass="logout-button" text="Logout" textAlignment="CENTER">
+                <font>
+                    <Font name="Arial" size="16.0" />
+                </font>
+                <HBox.margin>
+                    <Insets right="20.0" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </top>
+    <left>
+        <VBox prefHeight="599.0" prefWidth="220.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+            <Button fx:id="btnDash" layoutY="58.0" mnemonicParsing="false" onAction="#onDashClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Dashboard">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnClient" layoutY="101.0" mnemonicParsing="false" onAction="#onClientClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Client">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnVente" layoutY="144.0" mnemonicParsing="false" onAction="#onVenteClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Vente">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnCaisse" layoutY="187.0" mnemonicParsing="false" onAction="#onCaisseClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Caisse">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnMedicament" layoutY="230.0" mnemonicParsing="false" onAction="#onMedicamentClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Médicament">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnFournisseur" layoutY="273.0" mnemonicParsing="false" onAction="#onFournisseurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Fournisseur">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnApprovisionnement" layoutY="316.0" mnemonicParsing="false" onAction="#onApprovisionnementClick" prefHeight="48.0" prefWidth="214.0" styleClass="sidebar-button" text="Approvisionnement">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnUtilisateur" layoutY="359.0" mnemonicParsing="false" onAction="#onUtilisateurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Utilisateur">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+        </VBox>
+    </left>
+
+    <center>
+        <BorderPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </center>
+
+</BorderPane>
