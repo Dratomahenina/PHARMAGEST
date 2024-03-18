@@ -1,4 +1,4 @@
-package org.example.pharmagest;
+package org.example.pharmagest.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +20,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.pharmagest.utils.DatabaseConnection;
 
 public class DashboardMenuController {
 
@@ -126,6 +127,7 @@ public class DashboardMenuController {
 
     public void setId_utilisateur(int id_utilisateur) {
         this.id_utilisateur = id_utilisateur;
+        loadUserInfo();
     }
 
     public void initialize() {
@@ -137,7 +139,7 @@ public class DashboardMenuController {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        System.out.println("ID de l'utilisateur : " + id_utilisateur);
+        // System.out.println("ID de l'utilisateur dans initialize : " + id_utilisateur);
 
         // Récupérer les informations de l'utilisateur connecté depuis la base de données
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -157,16 +159,42 @@ public class DashboardMenuController {
             e.printStackTrace();
         }
 
+
         // Charger dashboard.fxml au démarrage
         loadInterface("dashboard");
     }
 
     private void loadInterface(String name) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(name + ".fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/pharmagest/" + name + ".fxml"));
             contentPane.setCenter(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void loadUserInfo() {
+        System.out.println("ID de l'utilisateur dans loadUserInfo : " + id_utilisateur);
+
+        // Récupérer les informations de l'utilisateur connecté depuis la base de données
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT nom_utilisateur FROM utilisateurs WHERE id_utilisateur = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id_utilisateur);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String nomUtilisateur = rs.getString("nom_utilisateur");
+                System.out.println("Nom d'utilisateur récupéré : " + nomUtilisateur);
+                lblUser.setText("Bienvenue, " + nomUtilisateur);
+            } else {
+                System.out.println("Aucun utilisateur trouvé avec l'ID : " + id_utilisateur);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

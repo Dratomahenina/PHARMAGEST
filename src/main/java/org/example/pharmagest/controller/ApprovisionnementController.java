@@ -1,4 +1,4 @@
-package org.example.pharmagest;
+package org.example.pharmagest.controller;
 
 public class ApprovisionnementController {
 }

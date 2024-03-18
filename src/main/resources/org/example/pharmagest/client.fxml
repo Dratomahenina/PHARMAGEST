@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.ClientController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.ClientController">
     <children>
         <VBox layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="960.0" spacing="20.0">
             <children>
@@ -33,16 +33,14 @@
                 </HBox>
                 <TableView fx:id="clientTable" prefHeight="500.0" prefWidth="960.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
-                        <TableColumn fx:id="nomColumn" prefWidth="100.0" text="Nom" />
-                        <TableColumn fx:id="prenomColumn" prefWidth="100.0" text="Prénom" />
-                        <TableColumn fx:id="dateNaissanceColumn" prefWidth="120.0" text="Date de naissance" />
-                        <TableColumn fx:id="adresseColumn" prefWidth="200.0" text="Adresse" />
-                        <TableColumn fx:id="telephoneColumn" prefWidth="100.0" text="Téléphone" />
+                        <TableColumn fx:id="idClientColumn" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="nomClientColumn" prefWidth="100.0" text="Nom" />
+                        <TableColumn fx:id="prenomClientColumn" prefWidth="100.0" text="Prénom" />
+                        <TableColumn fx:id="dateNaissanceClientColumn" prefWidth="120.0" text="Date de naissance" />
+                        <TableColumn fx:id="adresseClientColumn" prefWidth="200.0" text="Adresse" />
+                        <TableColumn fx:id="telephoneClientColumn" prefWidth="100.0" text="Téléphone" />
                         <TableColumn fx:id="nomMedecinColumn" prefWidth="120.0" text="Nom Médecin" />
                         <TableColumn fx:id="dateCreationColumn" prefWidth="120.0" text="Date Création" />
-                        <TableColumn fx:id="actifColumn" prefWidth="50.0" text="Actif" />
-                        <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action" />
                     </columns>
                 </TableView>
             </children>

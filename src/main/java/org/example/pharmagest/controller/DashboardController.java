@@ -1,4 +1,4 @@
-package org.example.pharmagest;
+package org.example.pharmagest.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

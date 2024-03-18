@@ -7,4 +7,8 @@ module org.example.pharmagest {
 
     opens org.example.pharmagest to javafx.fxml;
     exports org.example.pharmagest;
+    exports org.example.pharmagest.controller;
+    opens org.example.pharmagest.controller to javafx.fxml;
+    exports org.example.pharmagest.utils;
+    opens org.example.pharmagest.utils to javafx.fxml;
 }
