@@ -29,6 +29,14 @@
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
                             </padding>
                         </Button>
+                        <Button mnemonicParsing="false" onAction="#refreshClientList" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Refresh">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
                     </children>
                 </HBox>
                 <TableView fx:id="clientTable" prefHeight="500.0" prefWidth="960.0" style="-fx-background-color: white;">
@@ -41,6 +49,9 @@
                         <TableColumn fx:id="telephoneClientColumn" prefWidth="100.0" text="Téléphone" />
                         <TableColumn fx:id="nomMedecinColumn" prefWidth="120.0" text="Nom Médecin" />
                         <TableColumn fx:id="dateCreationColumn" prefWidth="120.0" text="Date Création" />
+                        <TableColumn prefWidth="120.0" text="Action">
+
+                        </TableColumn>
                     </columns>
                 </TableView>
             </children>

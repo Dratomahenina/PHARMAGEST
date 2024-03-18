@@ -11,40 +11,47 @@ import java.time.LocalDate;
 public class AjouterClientController {
 
     @FXML
-    private TextField nomClientTextField;
+    private TextField nomClientField;
     @FXML
-    private TextField prenomClientTextField;
+    private TextField prenomClientField;
     @FXML
     private DatePicker dateNaissanceClientPicker;
     @FXML
-    private TextField adresseClientTextField;
+    private TextField adresseClientField;
     @FXML
-    private TextField telephoneClientTextField;
+    private TextField telephoneClientField;
     @FXML
-    private TextField nomMedecinTextField;
+    private TextField nomMedecinField;
 
     private ClientDAO clientDAO;
+    private ClientController clientController;
 
+    @FXML
     public void initialize() {
         clientDAO = new ClientDAO();
     }
 
     @FXML
     private void handleAjouterClient() {
-        String nomClient = nomClientTextField.getText();
-        String prenomClient = prenomClientTextField.getText();
+        String nomClient = nomClientField.getText();
+        String prenomClient = prenomClientField.getText();
         LocalDate dateNaissanceClient = dateNaissanceClientPicker.getValue();
-        String adresseClient = adresseClientTextField.getText();
-        String telephoneClient = telephoneClientTextField.getText();
-        String nomMedecin = nomMedecinTextField.getText();
+        String adresseClient = adresseClientField.getText();
+        String telephoneClient = telephoneClientField.getText();
+        String nomMedecin = nomMedecinField.getText();
 
-        // Créer un nouvel objet Client avec les données saisies
-        Client nouveauClient = new Client(0, nomClient, prenomClient, dateNaissanceClient, adresseClient, telephoneClient, nomMedecin, LocalDate.now());
+        Client client = new Client(0, nomClient, prenomClient, dateNaissanceClient, adresseClient, telephoneClient, nomMedecin, LocalDate.now());
+        clientDAO.addClient(client);
 
-        // Enregistrer le nouveau client dans la base de données
-        clientDAO.addClient(nouveauClient);
+        if (clientController != null) {
+            clientController.refreshClientList();
+        }
 
         // Fermer la fenêtre d'ajout de client
-        nomClientTextField.getScene().getWindow().hide();
+        nomClientField.getScene().getWindow().hide();
+    }
+
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
     }
 }

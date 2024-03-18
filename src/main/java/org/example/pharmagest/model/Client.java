@@ -25,8 +25,6 @@ public class Client {
         this.dateCreation = new SimpleObjectProperty<>(dateCreation);
     }
 
-    // Getters et setters
-
     public int getIdClient() {
         return idClient.get();
     }

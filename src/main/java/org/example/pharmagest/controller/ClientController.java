@@ -42,7 +42,6 @@ public class ClientController {
     private ClientDAO clientDAO;
 
     @FXML
-    // ClientController.java
     public void initialize() {
         // Initialiser les colonnes du tableau
         idClientColumn.setCellValueFactory(new PropertyValueFactory<>("idClient"));
@@ -66,18 +65,21 @@ public class ClientController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/ajouterclient.fxml"));
             Parent root = loader.load();
+            AjouterClientController ajouterClientController = loader.getController();
+            ajouterClientController.setClientController(this);
+
             Stage stage = new Stage();
             stage.setTitle("Ajouter un client");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-
-            // Rafraîchir le tableau des clients après l'ajout d'un nouveau client
-            clientList.clear();
-            clientList.addAll(clientDAO.getAllClients());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void refreshClientList() {
+        clientList.clear();
+        clientList.addAll(clientDAO.getAllClients());
+    }
 }
