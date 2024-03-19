@@ -49,4 +49,32 @@ public class ClientDAO {
         }
         return clients;
     }
+
+    public void updateClient(Client client) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "UPDATE client SET nom_client = ?, prenom_client = ?, date_naissance_client = ?, adresse_client = ?, telephone_client = ?, nom_medecin = ? WHERE id_client = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, client.getNomClient());
+            stmt.setString(2, client.getPrenomClient());
+            stmt.setDate(3, Date.valueOf(client.getDateNaissanceClient()));
+            stmt.setString(4, client.getAdresseClient());
+            stmt.setString(5, client.getTelephoneClient());
+            stmt.setString(6, client.getNomMedecin());
+            stmt.setInt(7, client.getIdClient());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteClient(Client client) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "DELETE FROM client WHERE id_client = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, client.getIdClient());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

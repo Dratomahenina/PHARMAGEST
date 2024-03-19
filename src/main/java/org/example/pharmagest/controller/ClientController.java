@@ -6,9 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.pharmagest.dao.ClientDAO;
@@ -37,6 +39,8 @@ public class ClientController {
     private TableColumn<Client, String> nomMedecinColumn;
     @FXML
     private TableColumn<Client, LocalDate> dateCreationColumn;
+    @FXML
+    private TableColumn<Client, Void> actionColumn;
 
     private ObservableList<Client> clientList;
     private ClientDAO clientDAO;
@@ -53,11 +57,50 @@ public class ClientController {
         nomMedecinColumn.setCellValueFactory(new PropertyValueFactory<>("nomMedecin"));
         dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
-        clientDAO = new ClientDAO();
-        clientList = FXCollections.observableArrayList(clientDAO.getAllClients());
+        // Configurer la colonne "Action"
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button modifierButton = new Button();
+            private final Button supprimerButton = new Button();
 
-        // Affecter les données au tableau
-        clientTable.setItems(clientList);
+            {
+                // Charger les images pour les icônes des boutons
+                ImageView editIcon = new ImageView(new Image(getClass().getResourceAsStream("/org/example/pharmagest/assets/edit.png")));
+                ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/org/example/pharmagest/assets/delete.png")));
+
+                // Redimensionner les icônes à une taille appropriée
+                editIcon.setFitWidth(16);
+                editIcon.setFitHeight(16);
+                deleteIcon.setFitWidth(16);
+                deleteIcon.setFitHeight(16);
+
+                // Définir les icônes pour les boutons
+                modifierButton.setGraphic(editIcon);
+                supprimerButton.setGraphic(deleteIcon);
+
+                modifierButton.setOnAction(event -> {
+                    Client client = getTableView().getItems().get(getIndex());
+                    modifierClient(client);
+                });
+
+                supprimerButton.setOnAction(event -> {
+                    Client client = getTableView().getItems().get(getIndex());
+                    supprimerClient(client);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(new HBox(5, modifierButton, supprimerButton));
+                }
+            }
+        });
+
+        clientDAO = new ClientDAO();
+        refreshClientList();
     }
 
     @FXML
@@ -78,8 +121,45 @@ public class ClientController {
         }
     }
 
+    @FXML
+    private void handleRefreshClient() {
+        refreshClientList();
+    }
+
     public void refreshClientList() {
-        clientList.clear();
-        clientList.addAll(clientDAO.getAllClients());
+        clientList = FXCollections.observableArrayList(clientDAO.getAllClients());
+        clientTable.setItems(clientList);
+    }
+
+    private void modifierClient(Client client) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/modifierclient.fxml"));
+            Parent root = loader.load();
+            ModifierClientController modifierClientController = loader.getController();
+            modifierClientController.setClient(client);
+            modifierClientController.setClientController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modifier un client");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void supprimerClient(Client client) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Êtes-vous sûr de vouloir supprimer ce client ?");
+        alert.setContentText("Cette action est irréversible.");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                clientDAO.deleteClient(client);
+                refreshClientList();
+            }
+        });
     }
 }
