@@ -67,5 +67,5 @@
 
 .button:hover,
 .button:pressed {
-    -fx-font-size: 13px;
+    -fx-font-size: 15px;
 }

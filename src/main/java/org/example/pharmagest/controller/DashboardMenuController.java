@@ -58,23 +58,34 @@ public class DashboardMenuController {
     private Button btnUtilisateur;
 
     @FXML
+    private Button btnFamille;
+
+    @FXML
+    private Button btnForme;
+
+    @FXML
     private BorderPane contentPane;
 
-    // Méthode appelée lors du clic sur le bouton de déconnexion
+    private int id_utilisateur;
+    private String userRole;
+
+    public void setId_utilisateur(int id_utilisateur) {
+        this.id_utilisateur = id_utilisateur;
+        loadUserInfo();
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+        updateMenuVisibility();
+    }
+
     @FXML
     private void onLogoutClick() {
         try {
-            // Charger le fichier FXML de la page de connexion
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/login.fxml"));
             Parent root = loader.load();
-
-            // Créer une nouvelle scène avec la page de connexion
             Scene scene = new Scene(root);
-
-            // Obtenir la référence de la fenêtre principale
             Stage stage = (Stage) btnLogout.getScene().getWindow();
-
-            // Changer la scène pour afficher la page de connexion
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -82,7 +93,6 @@ public class DashboardMenuController {
         }
     }
 
-    // Méthodes appelées lors du clic sur les boutons du menu
     @FXML
     private void onDashClick() {
         loadInterface("dashboard");
@@ -114,6 +124,16 @@ public class DashboardMenuController {
     }
 
     @FXML
+    private void onFamilleClick() {
+        loadInterface("famille");
+    }
+
+    @FXML
+    private void onFormeClick() {
+        loadInterface("forme");
+    }
+
+    @FXML
     private void onApprovisionnementClick() {
         loadInterface("approvisionnement");
     }
@@ -123,15 +143,7 @@ public class DashboardMenuController {
         loadInterface("utilisateur");
     }
 
-    private int id_utilisateur;
-
-    public void setId_utilisateur(int id_utilisateur) {
-        this.id_utilisateur = id_utilisateur;
-        loadUserInfo();
-    }
-
     public void initialize() {
-        // Créer un Timeline pour mettre à jour l'heure et la date en temps réel
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             LocalDateTime now = LocalDateTime.now();
             lblHeure.setText(now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
@@ -139,29 +151,68 @@ public class DashboardMenuController {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-        // System.out.println("ID de l'utilisateur dans initialize : " + id_utilisateur);
+        loadInterface("dashboard");
+    }
 
-        // Récupérer les informations de l'utilisateur connecté depuis la base de données
+    private void loadUserInfo() {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT nom_utilisateur FROM utilisateurs WHERE id_utilisateur = ?";
+            String query = "SELECT nom_utilisateur, role FROM utilisateurs WHERE id_utilisateur = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, id_utilisateur);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 String nomUtilisateur = rs.getString("nom_utilisateur");
+                String role = rs.getString("role");
                 System.out.println("Nom d'utilisateur récupéré : " + nomUtilisateur);
-                lblUser.setText("Bienvenue, " + nomUtilisateur);
+                System.out.println("Rôle de l'utilisateur : " + role);
+                lblUser.setText("Bienvenue " + nomUtilisateur + ", " +role);
+                setUserRole(role);
             } else {
                 System.out.println("Aucun utilisateur trouvé avec l'ID : " + id_utilisateur);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
-
-        // Charger dashboard.fxml au démarrage
-        loadInterface("dashboard");
+    private void updateMenuVisibility() {
+        if (userRole != null) {
+            if (userRole.equals("admin")) {
+                btnDash.setVisible(true);
+                btnClient.setVisible(true);
+                btnVente.setVisible(true);
+                btnCaisse.setVisible(true);
+                btnMedicament.setVisible(true);
+                btnFournisseur.setVisible(true);
+                btnApprovisionnement.setVisible(true);
+                btnUtilisateur.setVisible(true);
+                btnFamille.setVisible(true);
+                btnForme.setVisible(true);
+            } else if (userRole.equals("vendeur")) {
+                btnDash.setVisible(false);
+                btnClient.setVisible(true);
+                btnVente.setVisible(true);
+                btnCaisse.setVisible(false);
+                btnMedicament.setVisible(false);
+                btnFournisseur.setVisible(false);
+                btnApprovisionnement.setVisible(false);
+                btnUtilisateur.setVisible(false);
+                btnFamille.setVisible(false);
+                btnForme.setVisible(false);
+            } else if (userRole.equals("caissier")) {
+                btnDash.setVisible(false);
+                btnClient.setVisible(false);
+                btnVente.setVisible(false);
+                btnCaisse.setVisible(true);
+                btnMedicament.setVisible(false);
+                btnFournisseur.setVisible(false);
+                btnApprovisionnement.setVisible(false);
+                btnUtilisateur.setVisible(false);
+                btnFamille.setVisible(false);
+                btnForme.setVisible(false);
+            }
+        }
     }
 
     private void loadInterface(String name) {
@@ -172,29 +223,4 @@ public class DashboardMenuController {
             e.printStackTrace();
         }
     }
-
-    private void loadUserInfo() {
-        System.out.println("ID de l'utilisateur dans loadUserInfo : " + id_utilisateur);
-
-        // Récupérer les informations de l'utilisateur connecté depuis la base de données
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT nom_utilisateur FROM utilisateurs WHERE id_utilisateur = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, id_utilisateur);
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String nomUtilisateur = rs.getString("nom_utilisateur");
-                System.out.println("Nom d'utilisateur récupéré : " + nomUtilisateur);
-                lblUser.setText("Bienvenue, " + nomUtilisateur);
-            } else {
-                System.out.println("Aucun utilisateur trouvé avec l'ID : " + id_utilisateur);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 }

@@ -81,6 +81,16 @@
                     <Font size="16.0" />
                 </font>
             </Button>
+            <Button fx:id="btnFamille" layoutY="402.0" mnemonicParsing="false" onAction="#onFamilleClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Famille">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnForme" layoutY="402.0" mnemonicParsing="false" onAction="#onFormeClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Forme">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Button>
             <Button fx:id="btnApprovisionnement" layoutY="316.0" mnemonicParsing="false" onAction="#onApprovisionnementClick" prefHeight="48.0" prefWidth="214.0" styleClass="sidebar-button" text="Approvisionnement">
                 <font>
                     <Font size="16.0" />
