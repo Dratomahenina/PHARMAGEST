@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.example.pharmagest.model.User;
 import org.example.pharmagest.utils.DatabaseConnection;
 
 import java.io.IOException;
@@ -35,11 +36,22 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        int id_utilisateur = authenticateUser(username, password);
-        System.out.println("ID de l'utilisateur après authentification : " + id_utilisateur);
-        if (id_utilisateur > 0) {
-            String userRole = getUserRole(id_utilisateur);
-            openDashboard(id_utilisateur, userRole);
+        User user = authenticateUser(username, password);
+        if (user != null) {
+            // Insérer manuellement un enregistrement dans la table "utilisateurs"
+            try (Connection conn = DatabaseConnection.getConnection()) {
+                String query = "INSERT INTO utilisateurs (nom_utilisateur, mot_de_passe, role) VALUES (?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, user.getUsername());
+                stmt.setString(2, password);
+                stmt.setString(3, user.getRole());
+                stmt.executeUpdate();
+                System.out.println("Enregistrement inséré dans la table utilisateurs");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            openDashboard(user.getId(), user.getRole());
         } else {
             System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
         }
@@ -64,44 +76,26 @@ public class LoginController {
         }
     }
 
-    private int authenticateUser(String username, String password) {
+    private User authenticateUser(String username, String password) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT id_utilisateur FROM utilisateurs WHERE nom_utilisateur = ? AND mot_de_passe = ?";
+            String query = "SELECT id_utilisateur, nom_utilisateur, role FROM utilisateurs WHERE nom_utilisateur = ? AND mot_de_passe = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
             stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                int id_utilisateur = rs.getInt("id_utilisateur");
-                System.out.println("ID de l'utilisateur récupéré : " + id_utilisateur);
-                return id_utilisateur;
+                int userId = rs.getInt("id_utilisateur");
+                String nomUtilisateur = rs.getString("nom_utilisateur");
+                String userRole = rs.getString("role");
+                System.out.println("Utilisateur authentifié : ID = " + userId + ", Nom d'utilisateur = " + nomUtilisateur + ", Rôle = " + userRole);
+                return new User(userId, nomUtilisateur, userRole);
             } else {
                 System.out.println("Aucun utilisateur trouvé avec les informations d'identification fournies.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
-    }
-
-    private String getUserRole(int id_utilisateur) {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT role FROM utilisateurs WHERE id_utilisateur = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, id_utilisateur);
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String userRole = rs.getString("role");
-                System.out.println("Rôle de l'utilisateur récupéré : " + userRole);
-                return userRole;
-            } else {
-                System.out.println("Aucun utilisateur trouvé avec l'ID : " + id_utilisateur);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
+        return null;
     }
 }
