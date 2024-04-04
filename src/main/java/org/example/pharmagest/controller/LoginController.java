@@ -15,6 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 public class LoginController {
     @FXML
     private TextField usernameField;
@@ -28,6 +31,10 @@ public class LoginController {
     @FXML
     private void initialize() {
         loginButton.setOnAction(e -> onLoginButtonClick());
+
+        // Ajoutez les gestionnaires d'événements pour les champs de saisie
+        usernameField.setOnKeyPressed(this::handleKeyPressed);
+        passwordField.setOnKeyPressed(this::handleKeyPressed);
     }
 
     @FXML
@@ -42,6 +49,12 @@ public class LoginController {
             openDashboard(id_utilisateur, userRole);
         } else {
             System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
+        }
+    }
+
+    private void handleKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            onLoginButtonClick();
         }
     }
 

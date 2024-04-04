@@ -20,7 +20,7 @@ public class Fournisseur {
         this.telFournisseur = new SimpleStringProperty(telFournisseur);
         this.adresseFournisseur = new SimpleStringProperty(adresseFournisseur);
         this.statut = new SimpleStringProperty(statut);
-        this.dateCreation = new SimpleObjectProperty(dateCreation);
+        this.dateCreation = new SimpleObjectProperty<>(dateCreation);
     }
 
     // Getters et Setters pour les propriétés
