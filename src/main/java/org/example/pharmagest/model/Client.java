@@ -11,17 +11,17 @@ public class Client {
     private ObjectProperty<LocalDate> dateNaissanceClient;
     private StringProperty adresseClient;
     private StringProperty telephoneClient;
-    private StringProperty nomMedecin;
+    private StringProperty statut;
     private ObjectProperty<LocalDate> dateCreation;
 
-    public Client(int idClient, String nomClient, String prenomClient, LocalDate dateNaissanceClient, String adresseClient, String telephoneClient, String nomMedecin, LocalDate dateCreation) {
+    public Client(int idClient, String nomClient, String prenomClient, LocalDate dateNaissanceClient, String adresseClient, String telephoneClient, String statut, LocalDate dateCreation) {
         this.idClient = new SimpleIntegerProperty(idClient);
         this.nomClient = new SimpleStringProperty(nomClient);
         this.prenomClient = new SimpleStringProperty(prenomClient);
         this.dateNaissanceClient = new SimpleObjectProperty<>(dateNaissanceClient);
         this.adresseClient = new SimpleStringProperty(adresseClient);
         this.telephoneClient = new SimpleStringProperty(telephoneClient);
-        this.nomMedecin = new SimpleStringProperty(nomMedecin);
+        this.statut = new SimpleStringProperty(statut);
         this.dateCreation = new SimpleObjectProperty<>(dateCreation);
     }
 
@@ -97,16 +97,16 @@ public class Client {
         this.telephoneClient.set(telephoneClient);
     }
 
-    public String getNomMedecin() {
-        return nomMedecin.get();
+    public String getStatut() {
+        return statut.get();
     }
 
-    public StringProperty nomMedecinProperty() {
-        return nomMedecin;
+    public StringProperty statutProperty() {
+        return statut;
     }
 
-    public void setNomMedecin(String nomMedecin) {
-        this.nomMedecin.set(nomMedecin);
+    public void setStatut(String statut) {
+        this.statut.set(statut);
     }
 
     public LocalDate getDateCreation() {

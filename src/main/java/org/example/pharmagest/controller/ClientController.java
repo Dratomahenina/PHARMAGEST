@@ -36,12 +36,11 @@ public class ClientController {
     @FXML
     private TableColumn<Client, String> telephoneClientColumn;
     @FXML
-    private TableColumn<Client, String> nomMedecinColumn;
+    private TableColumn<Client, String> statutColumn;
     @FXML
     private TableColumn<Client, LocalDate> dateCreationColumn;
     @FXML
     private TableColumn<Client, Void> actionColumn;
-
     private ObservableList<Client> clientList;
     private ClientDAO clientDAO;
 
@@ -54,7 +53,7 @@ public class ClientController {
         dateNaissanceClientColumn.setCellValueFactory(new PropertyValueFactory<>("dateNaissanceClient"));
         adresseClientColumn.setCellValueFactory(new PropertyValueFactory<>("adresseClient"));
         telephoneClientColumn.setCellValueFactory(new PropertyValueFactory<>("telephoneClient"));
-        nomMedecinColumn.setCellValueFactory(new PropertyValueFactory<>("nomMedecin"));
+        statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
         dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
         // Configurer la colonne "Action"
@@ -68,10 +67,10 @@ public class ClientController {
                 ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/org/example/pharmagest/assets/delete.png")));
 
                 // Redimensionner les icônes à une taille appropriée
-                editIcon.setFitWidth(16);
-                editIcon.setFitHeight(16);
-                deleteIcon.setFitWidth(16);
-                deleteIcon.setFitHeight(16);
+                editIcon.setFitWidth(18);
+                editIcon.setFitHeight(18);
+                deleteIcon.setFitWidth(18);
+                deleteIcon.setFitHeight(18);
 
                 // Définir les icônes pour les boutons
                 modifierButton.setGraphic(editIcon);

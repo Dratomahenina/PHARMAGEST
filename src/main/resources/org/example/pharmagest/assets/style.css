@@ -22,6 +22,15 @@
     -fx-cursor: hand;
 }
 
+.login-button .text {
+    -fx-font-size: 18px; /* Ajustez la valeur selon la taille de police souhaitée */
+}
+
+.login-button:hover,
+.login-button:pressed {
+    -fx-effect: none;
+}
+
 /* Styles pour dashboard_menu.fxml */
 .top-bar {
     -fx-background-color: #1d9e9e;
@@ -30,7 +39,7 @@
 
 .top-bar .title {
     -fx-text-fill: white;
-    -fx-font-size: 36px;
+    -fx-font-size: 45px;
     -fx-font-weight: bold;
 }
 
@@ -40,6 +49,15 @@
     -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+}
+
+.logout-button .text {
+    -fx-font-size: 18px; /* Ajustez la valeur selon la taille de police souhaitée */
+}
+
+.logout-button:hover,
+.logout-button:pressed {
+    -fx-effect: none;
 }
 
 .sidebar {
@@ -55,6 +73,15 @@
     -fx-alignment: CENTER_LEFT;
 }
 
+.sidebar-button .text {
+    -fx-font-size: 18px; /* Ajustez la valeur selon la taille souhaitée */
+}
+
+.sidebar-button:hover,
+.sidebar-button:pressed {
+    -fx-effect: none;
+}
+
 .user-label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -67,5 +94,10 @@
 
 .button:hover,
 .button:pressed {
-    -fx-font-size: 15px;
+    -fx-effect: none;
+}
+
+.dashboard-button:hover,
+.dashboard-button:pressed {
+    -fx-effect: none;
 }

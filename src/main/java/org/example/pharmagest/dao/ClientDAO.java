@@ -11,14 +11,14 @@ public class ClientDAO {
 
     public void addClient(Client client) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO client (nom_client, prenom_client, date_naissance_client, adresse_client, telephone_client, nom_medecin) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO client (nom_client, prenom_client, date_naissance_client, adresse_client, telephone_client, statut) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, client.getNomClient());
             stmt.setString(2, client.getPrenomClient());
             stmt.setDate(3, Date.valueOf(client.getDateNaissanceClient()));
             stmt.setString(4, client.getAdresseClient());
             stmt.setString(5, client.getTelephoneClient());
-            stmt.setString(6, client.getNomMedecin());
+            stmt.setString(6, client.getStatut());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class ClientDAO {
                         rs.getDate("date_naissance_client").toLocalDate(),
                         rs.getString("adresse_client"),
                         rs.getString("telephone_client"),
-                        rs.getString("nom_medecin"),
+                        rs.getString("statut"),
                         rs.getDate("date_creation").toLocalDate()
                 );
                 clients.add(client);
@@ -52,14 +52,14 @@ public class ClientDAO {
 
     public void updateClient(Client client) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "UPDATE client SET nom_client = ?, prenom_client = ?, date_naissance_client = ?, adresse_client = ?, telephone_client = ?, nom_medecin = ? WHERE id_client = ?";
+            String query = "UPDATE client SET nom_client = ?, prenom_client = ?, date_naissance_client = ?, adresse_client = ?, telephone_client = ?, statut = ? WHERE id_client = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, client.getNomClient());
             stmt.setString(2, client.getPrenomClient());
             stmt.setDate(3, Date.valueOf(client.getDateNaissanceClient()));
             stmt.setString(4, client.getAdresseClient());
             stmt.setString(5, client.getTelephoneClient());
-            stmt.setString(6, client.getNomMedecin());
+            stmt.setString(6, client.getStatut());
             stmt.setInt(7, client.getIdClient());
             stmt.executeUpdate();
         } catch (SQLException e) {

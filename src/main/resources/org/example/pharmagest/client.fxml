@@ -23,7 +23,7 @@
                         </Label>
                         <Button mnemonicParsing="false" onAction="#handleAjouterClient" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Ajouter un client">
                             <font>
-                                <Font name="System Bold" size="14.0" />
+                                <Font name="System Bold" size="16.0" />
                             </font>
                             <padding>
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
@@ -31,7 +31,7 @@
                         </Button>
                         <Button mnemonicParsing="false" onAction="#handleRefreshClient" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Refresh">
                             <font>
-                                <Font name="System Bold" size="14.0" />
+                                <Font name="System Bold" size="16.0" />
                             </font>
                             <padding>
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
@@ -47,7 +47,7 @@
                         <TableColumn fx:id="dateNaissanceClientColumn" prefWidth="108.26669311523438" text="Date de naissance" />
                         <TableColumn fx:id="adresseClientColumn" prefWidth="128.26666259765625" text="Adresse" />
                         <TableColumn fx:id="telephoneClientColumn" prefWidth="135.73330688476562" text="Téléphone" />
-                        <TableColumn fx:id="nomMedecinColumn" prefWidth="107.2000732421875" text="Nom Médecin" />
+                        <TableColumn fx:id="statutColumn" prefWidth="100.0" text="Statut" />
                         <TableColumn fx:id="dateCreationColumn" minWidth="0.0" prefWidth="128.26666259765625" text="Date Création" />
                         <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="102.93328857421875" text="Action" />
                     </columns>

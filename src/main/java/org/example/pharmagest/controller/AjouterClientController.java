@@ -1,6 +1,7 @@
 package org.example.pharmagest.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.example.pharmagest.dao.ClientDAO;
@@ -21,7 +22,7 @@ public class AjouterClientController {
     @FXML
     private TextField telephoneClientField;
     @FXML
-    private TextField nomMedecinField;
+    private ChoiceBox<String> statutChoiceBox;
 
     private ClientDAO clientDAO;
     private ClientController clientController;
@@ -29,6 +30,8 @@ public class AjouterClientController {
     @FXML
     public void initialize() {
         clientDAO = new ClientDAO();
+        statutChoiceBox.getItems().addAll("actif", "inactif");
+        statutChoiceBox.setValue("actif"); // Valeur par défaut
     }
 
     @FXML
@@ -38,9 +41,9 @@ public class AjouterClientController {
         LocalDate dateNaissanceClient = dateNaissanceClientPicker.getValue();
         String adresseClient = adresseClientField.getText();
         String telephoneClient = telephoneClientField.getText();
-        String nomMedecin = nomMedecinField.getText();
+        String statut = statutChoiceBox.getValue();
 
-        Client client = new Client(0, nomClient, prenomClient, dateNaissanceClient, adresseClient, telephoneClient, nomMedecin, LocalDate.now());
+        Client client = new Client(0, nomClient, prenomClient, dateNaissanceClient, adresseClient, telephoneClient, statut, LocalDate.now());
         clientDAO.addClient(client);
 
         if (clientController != null) {

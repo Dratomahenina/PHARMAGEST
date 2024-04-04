@@ -40,9 +40,6 @@
                 </HBox.margin>
             </Label>
             <Button fx:id="btnLogout" layoutX="1151.0" layoutY="16.0" mnemonicParsing="false" onAction="#onLogoutClick" prefHeight="35.0" prefWidth="115.0" styleClass="logout-button" text="Logout" textAlignment="CENTER">
-                <font>
-                    <Font name="Arial" size="16.0" />
-                </font>
                 <HBox.margin>
                     <Insets right="20.0" />
                 </HBox.margin>
@@ -51,56 +48,16 @@
     </top>
     <left>
         <VBox prefHeight="599.0" prefWidth="220.0" styleClass="sidebar" BorderPane.alignment="CENTER">
-            <Button fx:id="btnDash" layoutY="58.0" mnemonicParsing="false" onAction="#onDashClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Dashboard">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnClient" layoutY="101.0" mnemonicParsing="false" onAction="#onClientClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Client">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnVente" layoutY="144.0" mnemonicParsing="false" onAction="#onVenteClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Vente">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnCaisse" layoutY="187.0" mnemonicParsing="false" onAction="#onCaisseClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Caisse">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnMedicament" layoutY="230.0" mnemonicParsing="false" onAction="#onMedicamentClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Médicament">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnFournisseur" layoutY="273.0" mnemonicParsing="false" onAction="#onFournisseurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Fournisseur">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnFamille" layoutY="402.0" mnemonicParsing="false" onAction="#onFamilleClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Famille">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnForme" layoutY="402.0" mnemonicParsing="false" onAction="#onFormeClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Forme">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnApprovisionnement" layoutY="316.0" mnemonicParsing="false" onAction="#onApprovisionnementClick" prefHeight="48.0" prefWidth="214.0" styleClass="sidebar-button" text="Approvisionnement">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
-            <Button fx:id="btnUtilisateur" layoutY="359.0" mnemonicParsing="false" onAction="#onUtilisateurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Utilisateur">
-                <font>
-                    <Font size="16.0" />
-                </font>
-            </Button>
+            <Button fx:id="btnDash" layoutY="58.0" mnemonicParsing="false" onAction="#onDashClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Dashboard"/>
+            <Button fx:id="btnClient" layoutY="101.0" mnemonicParsing="false" onAction="#onClientClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Client"/>
+            <Button fx:id="btnVente" layoutY="144.0" mnemonicParsing="false" onAction="#onVenteClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Vente"/>
+            <Button fx:id="btnCaisse" layoutY="187.0" mnemonicParsing="false" onAction="#onCaisseClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Caisse"/>
+            <Button fx:id="btnMedicament" layoutY="230.0" mnemonicParsing="false" onAction="#onMedicamentClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Médicament"/>
+            <Button fx:id="btnFournisseur" layoutY="273.0" mnemonicParsing="false" onAction="#onFournisseurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Fournisseur"/>
+            <Button fx:id="btnFamille" layoutY="402.0" mnemonicParsing="false" onAction="#onFamilleClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Famille"/>
+            <Button fx:id="btnForme" layoutY="402.0" mnemonicParsing="false" onAction="#onFormeClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Forme"/>
+            <Button fx:id="btnApprovisionnement" layoutY="316.0" mnemonicParsing="false" onAction="#onApprovisionnementClick" prefHeight="48.0" prefWidth="214.0" styleClass="sidebar-button" text="Approvisionnement"/>
+            <Button fx:id="btnUtilisateur" layoutY="359.0" mnemonicParsing="false" onAction="#onUtilisateurClick" prefHeight="43.0" prefWidth="200.0" styleClass="sidebar-button" text="Utilisateur"/>
         </VBox>
     </left>
 

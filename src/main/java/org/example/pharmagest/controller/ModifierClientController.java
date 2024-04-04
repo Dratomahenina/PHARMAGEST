@@ -1,6 +1,7 @@
 package org.example.pharmagest.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.example.pharmagest.dao.ClientDAO;
@@ -21,7 +22,7 @@ public class ModifierClientController {
     @FXML
     private TextField telephoneClientField;
     @FXML
-    private TextField nomMedecinField;
+    private ChoiceBox<String> statutChoiceBox;
 
     private ClientDAO clientDAO;
     private ClientController clientController;
@@ -30,6 +31,7 @@ public class ModifierClientController {
     @FXML
     public void initialize() {
         clientDAO = new ClientDAO();
+        statutChoiceBox.getItems().addAll("actif", "inactif");
     }
 
     public void setClient(Client client) {
@@ -43,7 +45,7 @@ public class ModifierClientController {
         dateNaissanceClientPicker.setValue(client.getDateNaissanceClient());
         adresseClientField.setText(client.getAdresseClient());
         telephoneClientField.setText(client.getTelephoneClient());
-        nomMedecinField.setText(client.getNomMedecin());
+        statutChoiceBox.setValue(client.getStatut());
     }
 
     @FXML
@@ -53,14 +55,14 @@ public class ModifierClientController {
         LocalDate dateNaissanceClient = dateNaissanceClientPicker.getValue();
         String adresseClient = adresseClientField.getText();
         String telephoneClient = telephoneClientField.getText();
-        String nomMedecin = nomMedecinField.getText();
+        String statut = statutChoiceBox.getValue();
 
         client.setNomClient(nomClient);
         client.setPrenomClient(prenomClient);
         client.setDateNaissanceClient(dateNaissanceClient);
         client.setAdresseClient(adresseClient);
         client.setTelephoneClient(telephoneClient);
-        client.setNomMedecin(nomMedecin);
+        client.setStatut(statut);
 
         clientDAO.updateClient(client);
         clientController.refreshClientList();
