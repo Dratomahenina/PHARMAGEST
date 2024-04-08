@@ -17,7 +17,7 @@ import org.example.pharmagest.dao.FournisseurDAO;
 import org.example.pharmagest.model.Fournisseur;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.List;
 
 public class FournisseurController {
 
@@ -36,11 +36,13 @@ public class FournisseurController {
     @FXML
     private TableColumn<Fournisseur, String> statutColumn;
     @FXML
-    private TableColumn<Fournisseur, LocalDate> dateCreationColumn;
-    @FXML
     private TableColumn<Fournisseur, Void> actionColumn;
+    @FXML
+    private TextField searchField;
     private ObservableList<Fournisseur> fournisseurList;
     private FournisseurDAO fournisseurDAO;
+    private boolean idFournisseurSortAscending = true;
+    private boolean nomFournisseurSortAscending = true;
 
     @FXML
     public void initialize() {
@@ -51,7 +53,6 @@ public class FournisseurController {
         telFournisseurColumn.setCellValueFactory(new PropertyValueFactory<>("telFournisseur"));
         adresseFournisseurColumn.setCellValueFactory(new PropertyValueFactory<>("adresseFournisseur"));
         statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
         // Configurer la colonne "Action"
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -157,5 +158,43 @@ public class FournisseurController {
                 refreshFournisseurList();
             }
         });
+    }
+
+    @FXML
+    private void handleSearch() {
+        String searchTerm = searchField.getText().toLowerCase();
+        List<Fournisseur> searchResults = fournisseurDAO.searchFournisseurs(searchTerm);
+        fournisseurList = FXCollections.observableArrayList(searchResults);
+        fournisseurTable.setItems(fournisseurList);
+    }
+
+    @FXML
+    private void handleShowAllFournisseurs() {
+        searchField.clear();
+        refreshFournisseurList();
+    }
+
+    @FXML
+    private void handleIdFournisseurSort() {
+        fournisseurList.sort((f1, f2) -> {
+            if (idFournisseurSortAscending) {
+                return Integer.compare(f1.getIdFournisseur(), f2.getIdFournisseur());
+            } else {
+                return Integer.compare(f2.getIdFournisseur(), f1.getIdFournisseur());
+            }
+        });
+        idFournisseurSortAscending = !idFournisseurSortAscending;
+    }
+
+    @FXML
+    private void handleNomFournisseurSort() {
+        fournisseurList.sort((f1, f2) -> {
+            if (nomFournisseurSortAscending) {
+                return f1.getNomFournisseur().compareToIgnoreCase(f2.getNomFournisseur());
+            } else {
+                return f2.getNomFournisseur().compareToIgnoreCase(f1.getNomFournisseur());
+            }
+        });
+        nomFournisseurSortAscending = !nomFournisseurSortAscending;
     }
 }

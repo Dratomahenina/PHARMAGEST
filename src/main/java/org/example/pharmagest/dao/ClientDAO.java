@@ -77,4 +77,31 @@ public class ClientDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Client> searchClients(String searchTerm) {
+        List<Client> searchResults = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM client WHERE LOWER(nom_client) LIKE ? OR LOWER(prenom_client) LIKE ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + searchTerm + "%");
+            stmt.setString(2, "%" + searchTerm + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Client client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        rs.getDate("date_naissance_client").toLocalDate(),
+                        rs.getString("adresse_client"),
+                        rs.getString("telephone_client"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+                searchResults.add(client);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return searchResults;
+    }
 }

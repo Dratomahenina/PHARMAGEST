@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -37,18 +38,38 @@
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
                             </padding>
                         </Button>
+                        <TextField fx:id="searchField" promptText="Rechercher...">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Rechercher">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleShowAllClients" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Afficher tous les clients">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
                     </children>
                 </HBox>
                 <TableView fx:id="clientTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="idClientColumn" prefWidth="50.0" text="ID" />
-                        <TableColumn fx:id="nomClientColumn" prefWidth="100.0" text="Nom" />
-                        <TableColumn fx:id="prenomClientColumn" prefWidth="100.0" text="Prénom" />
+                        <TableColumn fx:id="idClientColumn" prefWidth="50.0" text="ID"/>
+                        <TableColumn fx:id="nomClientColumn" prefWidth="100.0" text="Nom"/>
+                        <TableColumn fx:id="prenomClientColumn" prefWidth="100.0" text="Prénom"/>
                         <TableColumn fx:id="dateNaissanceClientColumn" prefWidth="108.26669311523438" text="Date de naissance" />
                         <TableColumn fx:id="adresseClientColumn" prefWidth="128.26666259765625" text="Adresse" />
                         <TableColumn fx:id="telephoneClientColumn" prefWidth="135.73330688476562" text="Téléphone" />
                         <TableColumn fx:id="statutColumn" prefWidth="100.0" text="Statut" />
-                        <TableColumn fx:id="dateCreationColumn" minWidth="0.0" prefWidth="128.26666259765625" text="Date Création" />
                         <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="102.93328857421875" text="Action" />
                     </columns>
                 </TableView>

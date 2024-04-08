@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,6 +19,7 @@ import org.example.pharmagest.model.Client;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ClientController {
 
@@ -38,11 +40,14 @@ public class ClientController {
     @FXML
     private TableColumn<Client, String> statutColumn;
     @FXML
-    private TableColumn<Client, LocalDate> dateCreationColumn;
-    @FXML
     private TableColumn<Client, Void> actionColumn;
+    @FXML
+    private TextField searchField;
     private ObservableList<Client> clientList;
     private ClientDAO clientDAO;
+    private boolean idClientSortAscending = true;
+    private boolean nomClientSortAscending = true;
+    private boolean prenomClientSortAscending = true;
 
     @FXML
     public void initialize() {
@@ -54,7 +59,6 @@ public class ClientController {
         adresseClientColumn.setCellValueFactory(new PropertyValueFactory<>("adresseClient"));
         telephoneClientColumn.setCellValueFactory(new PropertyValueFactory<>("telephoneClient"));
         statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
         // Configurer la colonne "Action"
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -160,5 +164,55 @@ public class ClientController {
                 refreshClientList();
             }
         });
+    }
+
+    @FXML
+    private void handleSearch() {
+        String searchTerm = searchField.getText().toLowerCase();
+        List<Client> searchResults = clientDAO.searchClients(searchTerm);
+        clientList = FXCollections.observableArrayList(searchResults);
+        clientTable.setItems(clientList);
+    }
+
+    @FXML
+    private void handleShowAllClients() {
+        searchField.clear();
+        refreshClientList();
+    }
+
+    @FXML
+    private void handleIdClientSort(MouseEvent event) {
+        clientList.sort((c1, c2) -> {
+            if (idClientSortAscending) {
+                return Integer.compare(c1.getIdClient(), c2.getIdClient());
+            } else {
+                return Integer.compare(c2.getIdClient(), c1.getIdClient());
+            }
+        });
+        idClientSortAscending = !idClientSortAscending;
+    }
+
+    @FXML
+    private void handleNomClientSort(MouseEvent event) {
+        clientList.sort((c1, c2) -> {
+            if (nomClientSortAscending) {
+                return c1.getNomClient().compareToIgnoreCase(c2.getNomClient());
+            } else {
+                return c2.getNomClient().compareToIgnoreCase(c1.getNomClient());
+            }
+        });
+        nomClientSortAscending = !nomClientSortAscending;
+    }
+
+    @FXML
+    private void handlePrenomClientSort(MouseEvent event) {
+        clientList.sort((c1, c2) -> {
+            if (prenomClientSortAscending) {
+                return c1.getPrenomClient().compareToIgnoreCase(c2.getPrenomClient());
+            } else {
+                return c2.getPrenomClient().compareToIgnoreCase(c1.getPrenomClient());
+            }
+        });
+        prenomClientSortAscending = !prenomClientSortAscending;
     }
 }

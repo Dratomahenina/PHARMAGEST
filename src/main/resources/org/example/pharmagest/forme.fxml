@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -37,14 +38,34 @@
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
                             </padding>
                         </Button>
+                        <TextField fx:id="searchField" promptText="Rechercher...">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Rechercher">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleShowAllFormes" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Afficher toutes les formes">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
                     </children>
                 </HBox>
                 <TableView fx:id="formeTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="idFormeColumn" prefWidth="75.0" text="Référence" />
-                        <TableColumn fx:id="nomFormeColumn" prefWidth="200.0" text="Nom" />
+                        <TableColumn fx:id="idFormeColumn" prefWidth="75.0" text="Référence"/>
+                        <TableColumn fx:id="nomFormeColumn" prefWidth="200.0" text="Nom"/>
                         <TableColumn fx:id="statutColumn" prefWidth="100.0" text="Statut" />
-                        <TableColumn fx:id="dateCreationColumn" prefWidth="150.0" text="Date Création" />
                         <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="102.0" text="Action" />
                     </columns>
                 </TableView>

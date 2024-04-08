@@ -17,7 +17,7 @@ import org.example.pharmagest.dao.FormeDAO;
 import org.example.pharmagest.model.Forme;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.List;
 
 public class FormeController {
 
@@ -30,11 +30,13 @@ public class FormeController {
     @FXML
     private TableColumn<Forme, String> statutColumn;
     @FXML
-    private TableColumn<Forme, LocalDate> dateCreationColumn;
-    @FXML
     private TableColumn<Forme, Void> actionColumn;
+    @FXML
+    private TextField searchField;
     private ObservableList<Forme> formeList;
     private FormeDAO formeDAO;
+    private boolean idFormeSortAscending = true;
+    private boolean nomFormeSortAscending = true;
 
     @FXML
     public void initialize() {
@@ -42,7 +44,6 @@ public class FormeController {
         idFormeColumn.setCellValueFactory(new PropertyValueFactory<>("idForme"));
         nomFormeColumn.setCellValueFactory(new PropertyValueFactory<>("nomForme"));
         statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
         // Configurer la colonne "Action"
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -148,5 +149,43 @@ public class FormeController {
                 refreshFormeList();
             }
         });
+    }
+
+    @FXML
+    private void handleSearch() {
+        String searchTerm = searchField.getText().toLowerCase();
+        List<Forme> searchResults = formeDAO.searchFormes(searchTerm);
+        formeList = FXCollections.observableArrayList(searchResults);
+        formeTable.setItems(formeList);
+    }
+
+    @FXML
+    private void handleShowAllFormes() {
+        searchField.clear();
+        refreshFormeList();
+    }
+
+    @FXML
+    private void handleIdFormeSort() {
+        formeList.sort((f1, f2) -> {
+            if (idFormeSortAscending) {
+                return Integer.compare(f1.getIdForme(), f2.getIdForme());
+            } else {
+                return Integer.compare(f2.getIdForme(), f1.getIdForme());
+            }
+        });
+        idFormeSortAscending = !idFormeSortAscending;
+    }
+
+    @FXML
+    private void handleNomFormeSort() {
+        formeList.sort((f1, f2) -> {
+            if (nomFormeSortAscending) {
+                return f1.getNomForme().compareToIgnoreCase(f2.getNomForme());
+            } else {
+                return f2.getNomForme().compareToIgnoreCase(f1.getNomForme());
+            }
+        });
+        nomFormeSortAscending = !nomFormeSortAscending;
     }
 }

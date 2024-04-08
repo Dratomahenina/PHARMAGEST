@@ -18,6 +18,7 @@ import org.example.pharmagest.model.Famille;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class FamilleController {
 
@@ -30,11 +31,13 @@ public class FamilleController {
     @FXML
     private TableColumn<Famille, String> statutColumn;
     @FXML
-    private TableColumn<Famille, LocalDate> dateCreationColumn;
-    @FXML
     private TableColumn<Famille, Void> actionColumn;
+    @FXML
+    private TextField searchField;
     private ObservableList<Famille> familleList;
     private FamilleDAO familleDAO;
+    private boolean idFamilleSortAscending = true;
+    private boolean nomFamilleSortAscending = true;
 
     @FXML
     public void initialize() {
@@ -42,7 +45,6 @@ public class FamilleController {
         idFamilleColumn.setCellValueFactory(new PropertyValueFactory<>("idFamille"));
         nomFamilleColumn.setCellValueFactory(new PropertyValueFactory<>("nomFamille"));
         statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        dateCreationColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
 
         // Configurer la colonne "Action"
         actionColumn.setCellFactory(param -> new TableCell<>() {
@@ -148,5 +150,43 @@ public class FamilleController {
                 refreshFamilleList();
             }
         });
+    }
+
+    @FXML
+    private void handleSearch() {
+        String searchTerm = searchField.getText().toLowerCase();
+        List<Famille> searchResults = familleDAO.searchFamilles(searchTerm);
+        familleList = FXCollections.observableArrayList(searchResults);
+        familleTable.setItems(familleList);
+    }
+
+    @FXML
+    private void handleShowAllFamilles() {
+        searchField.clear();
+        refreshFamilleList();
+    }
+
+    @FXML
+    private void handleIdFamilleSort() {
+        familleList.sort((f1, f2) -> {
+            if (idFamilleSortAscending) {
+                return Integer.compare(f1.getIdFamille(), f2.getIdFamille());
+            } else {
+                return Integer.compare(f2.getIdFamille(), f1.getIdFamille());
+            }
+        });
+        idFamilleSortAscending = !idFamilleSortAscending;
+    }
+
+    @FXML
+    private void handleNomFamilleSort() {
+        familleList.sort((f1, f2) -> {
+            if (nomFamilleSortAscending) {
+                return f1.getNomFamille().compareToIgnoreCase(f2.getNomFamille());
+            } else {
+                return f2.getNomFamille().compareToIgnoreCase(f1.getNomFamille());
+            }
+        });
+        nomFamilleSortAscending = !nomFamilleSortAscending;
     }
 }

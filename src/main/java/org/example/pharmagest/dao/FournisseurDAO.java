@@ -74,4 +74,29 @@ public class FournisseurDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Fournisseur> searchFournisseurs(String searchTerm) {
+        List<Fournisseur> searchResults = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM fournisseur WHERE LOWER(nom_fournisseur) LIKE ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Fournisseur fournisseur = new Fournisseur(
+                        rs.getInt("id_fournisseur"),
+                        rs.getString("nom_fournisseur"),
+                        rs.getString("email_fournisseur"),
+                        rs.getString("tel_fournisseur"),
+                        rs.getString("adresse_fournisseur"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+                searchResults.add(fournisseur);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return searchResults;
+    }
 }

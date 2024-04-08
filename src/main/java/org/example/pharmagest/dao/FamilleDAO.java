@@ -65,4 +65,26 @@ public class FamilleDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Famille> searchFamilles(String searchTerm) {
+        List<Famille> searchResults = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM famille WHERE LOWER(nom_famille) LIKE ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Famille famille = new Famille(
+                        rs.getInt("id_famille"),
+                        rs.getString("nom_famille"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+                searchResults.add(famille);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return searchResults;
+    }
 }

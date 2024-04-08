@@ -65,4 +65,26 @@ public class FormeDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Forme> searchFormes(String searchTerm) {
+        List<Forme> searchResults = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM forme WHERE LOWER(nom_forme) LIKE ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Forme forme = new Forme(
+                        rs.getInt("id_forme"),
+                        rs.getString("nom_forme"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+                searchResults.add(forme);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return searchResults;
+    }
 }

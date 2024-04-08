@@ -27,11 +27,18 @@
                 <font>
                     <Font name="Arial" size="16.0" />
                 </font>
+                <graphic>
+                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@assets/profile.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
                 <HBox.margin>
                     <Insets right="20.0" />
                 </HBox.margin>
             </Label>
-            <Label fx:id="lblHeure" styleClass="user-label" text="12/03/2024">
+            <Label fx:id="lblHeure" styleClass="user-label" text="12/03/2024" onMouseClicked="#showCalendar">
                 <font>
                     <Font name="Arial" size="16.0" />
                 </font>
