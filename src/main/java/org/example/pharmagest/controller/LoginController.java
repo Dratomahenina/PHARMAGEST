@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -46,6 +47,7 @@ public class LoginController {
         System.out.println("ID de l'utilisateur après authentification : " + id_utilisateur);
         if (id_utilisateur > 0) {
             String userRole = getUserRole(id_utilisateur);
+            logUserLogin(id_utilisateur, username, userRole); // Enregistrer l'historique de connexion
             openDashboard(id_utilisateur, userRole);
         } else {
             System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
@@ -116,5 +118,20 @@ public class LoginController {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void logUserLogin(int userId, String username, String role) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "INSERT INTO login_historique (id_utilisateur, nom_utilisateur, role, date_heure) " +
+                    "VALUES (?, ?, ?, CURRENT_TIMESTAMP) " +
+                    "ON CONFLICT (id_utilisateur) DO UPDATE SET date_heure = CURRENT_TIMESTAMP";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, userId);
+            stmt.setString(2, username);
+            stmt.setString(3, role);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
