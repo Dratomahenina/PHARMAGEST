@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.pharmagest.controller.MedicamentController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.MedicamentController">
+    <children>
+        <VBox layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="960.0" spacing="20.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Label styleClass="title" text="Médicaments">
+                            <font>
+                                <Font name="System Bold" size="23.0" />
+                            </font>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#handleAjouterMedicament" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Ajouter un médicament">
+                            <font>
+                                <Font name="System Bold" size="11.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleRefreshMedicament" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Refresh">
+                            <font>
+                                <Font name="System Bold" size="11.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <TextField fx:id="searchField" promptText="Rechercher...">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Rechercher">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleShowAllMedicaments" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Afficher tous les médicaments">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </HBox>
+                <TableView fx:id="medicamentTable" prefHeight="500.0" prefWidth="790.0" style="-fx-background-color: white;">
+                    <columns>
+                        <TableColumn fx:id="idMedicamentColumn" prefWidth="62.66665840148926" text="Référence" />
+                        <TableColumn fx:id="nomMedicamentColumn" prefWidth="238.0" text="Nom" />
+                        <TableColumn fx:id="categorieMedicamentColumn" prefWidth="184.6666259765625" text="Famille" />
+                        <TableColumn fx:id="formeMedicamentColumn" prefWidth="156.0" text="Forme" />
+                        <TableColumn fx:id="statutColumn" prefWidth="156.0" text="Statut" />
+                        <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="169.3333740234375" text="Action" />
+                    </columns>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
