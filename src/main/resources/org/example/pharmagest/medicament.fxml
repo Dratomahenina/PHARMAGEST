@@ -1,14 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.pharmagest.controller.MedicamentController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.MedicamentController">
+    <children>
+        <VBox layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="960.0" spacing="20.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Label styleClass="title" text="Médicaments">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#handleAjouterMedicament" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Ajouter un médicament">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleRefreshMedicament" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Refresh">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                        <TextField fx:id="searchField" promptText="Rechercher...">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Rechercher">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </HBox>
+                <TableView fx:id="medicamentTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
+                    <columns>
+                        <TableColumn fx:id="idMedicamentColumn" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="nomMedicamentColumn" prefWidth="176.79998779296875" text="Nom" />
+                        <TableColumn fx:id="descriptionMedicamentColumn" prefWidth="194.3999786376953" text="Description" />
+                        <TableColumn fx:id="fournisseurColumn" prefWidth="134.4000244140625" text="Fournisseur" />
+                        <TableColumn fx:id="familleColumn" prefWidth="118.39996337890625" text="Famille" />
+                        <TableColumn fx:id="formeColumn" prefWidth="128.0" text="Forme" />
+                        <TableColumn fx:id="statutColumn" prefWidth="84.7999267578125" text="Statut" />
+                        <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="71.199951171875" text="Action" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

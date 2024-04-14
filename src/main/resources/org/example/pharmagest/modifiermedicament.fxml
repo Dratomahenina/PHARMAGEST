@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -13,12 +12,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.ModifierClientController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.ModifierMedicamentController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <Label text="Modifier un client">
+        <Label text="Modifier un médicament">
             <font>
                 <Font name="System Bold" size="24.0" />
             </font>
@@ -36,19 +35,19 @@
             </rowConstraints>
             <children>
                 <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                <TextField fx:id="nomClientField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                <TextField fx:id="nomMedicamentField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
-                <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                <TextField fx:id="prenomClientField" promptText="Prénom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label text="Description :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="descriptionMedicamentField" promptText="Description" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
-                <Label text="Date de naissance :" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                <DatePicker fx:id="dateNaissanceClientPicker" prefWidth="200.0" promptText="Date de naissance" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                <Label text="Fournisseur :" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <ChoiceBox fx:id="fournisseurChoiceBox" prefWidth="200.0" GridPane.rowIndex="2" GridPane.columnIndex="1" />
 
-                <Label text="Adresse :" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                <TextField fx:id="adresseClientField" promptText="Adresse" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                <Label text="Famille :" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <ChoiceBox fx:id="familleChoiceBox" prefWidth="200.0" GridPane.rowIndex="3" GridPane.columnIndex="1" />
 
-                <Label text="Téléphone :" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-                <TextField fx:id="telephoneClientField" promptText="Téléphone" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                <Label text="Forme :" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <ChoiceBox fx:id="formeChoiceBox" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="1" />
 
                 <Label text="Statut :" GridPane.rowIndex="5" GridPane.columnIndex="0" />
                 <ChoiceBox fx:id="statutChoiceBox" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="1" />
@@ -56,7 +55,7 @@
         </GridPane>
         <HBox alignment="CENTER" spacing="20.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleModifierClient" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Modifier">
+                <Button mnemonicParsing="false" onAction="#handleModifierMedicament" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Modifier">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>

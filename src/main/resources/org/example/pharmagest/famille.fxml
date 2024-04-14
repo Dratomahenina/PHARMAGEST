@@ -51,20 +51,12 @@
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
                             </padding>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleShowAllFamilles" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Afficher toutes les familles">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
-                            </padding>
-                        </Button>
                     </children>
                 </HBox>
                 <TableView fx:id="familleTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="idFamilleColumn" prefWidth="75.0" text="Référence"/>
-                        <TableColumn fx:id="nomFamilleColumn" prefWidth="200.0" text="Nom"/>
+                        <TableColumn fx:id="idFamilleColumn" prefWidth="75.0" text="Référence" />
+                        <TableColumn fx:id="nomFamilleColumn" prefWidth="200.0" text="Nom" />
                         <TableColumn fx:id="statutColumn" prefWidth="100.0" text="Statut" />
                         <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="102.0" text="Action" />
                     </columns>

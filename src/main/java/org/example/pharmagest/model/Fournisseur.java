@@ -13,6 +13,11 @@ public class Fournisseur {
     private StringProperty statut;
     private ObjectProperty<LocalDate> dateCreation;
 
+    @Override
+    public String toString() {
+        return this.getNomFournisseur();
+    }
+
     public Fournisseur(int idFournisseur, String nomFournisseur, String emailFournisseur, String telFournisseur, String adresseFournisseur, String statut, LocalDate dateCreation) {
         this.idFournisseur = new SimpleIntegerProperty(idFournisseur);
         this.nomFournisseur = new SimpleStringProperty(nomFournisseur);

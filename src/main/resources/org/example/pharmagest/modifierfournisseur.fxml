@@ -33,11 +33,20 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <TextField fx:id="nomFournisseurField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" />
-                <TextField fx:id="emailFournisseurField" promptText="Email" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.columnIndex="1" />
-                <TextField fx:id="telFournisseurField" promptText="Téléphone" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="1" />
-                <TextField fx:id="adresseFournisseurField" promptText="Adresse" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                <ChoiceBox fx:id="statutChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="nomFournisseurField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Email :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="emailFournisseurField" promptText="Email" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Téléphone :" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <TextField fx:id="telFournisseurField" promptText="Téléphone" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <Label text="Adresse :" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <TextField fx:id="adresseFournisseurField" promptText="Adresse" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                <Label text="Statut :" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <ChoiceBox fx:id="statutChoiceBox" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="1" />
             </children>
         </GridPane>
         <HBox alignment="CENTER" spacing="20.0">

@@ -99,4 +99,28 @@ public class FournisseurDAO {
         }
         return searchResults;
     }
+
+    public Fournisseur getFournisseurById(int fournisseurId) {
+        Fournisseur fournisseur = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM fournisseur WHERE id_fournisseur = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, fournisseurId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                fournisseur = new Fournisseur(
+                        rs.getInt("id_fournisseur"),
+                        rs.getString("nom_fournisseur"),
+                        rs.getString("email_fournisseur"),
+                        rs.getString("tel_fournisseur"),
+                        rs.getString("adresse_fournisseur"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return fournisseur;
+    }
 }

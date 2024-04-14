@@ -87,4 +87,25 @@ public class FormeDAO {
         }
         return searchResults;
     }
+
+    public Forme getFormeById(int formeId) {
+        Forme forme = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM forme WHERE id_forme = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, formeId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                forme = new Forme(
+                        rs.getInt("id_forme"),
+                        rs.getString("nom_forme"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return forme;
+    }
 }

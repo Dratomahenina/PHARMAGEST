@@ -32,14 +32,27 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <TextField fx:id="nomClientField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" />
-                <TextField fx:id="prenomClientField" promptText="Prénom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.columnIndex="1" />
-                <DatePicker fx:id="dateNaissanceClientPicker" prefWidth="200.0" promptText="Date de naissance" GridPane.rowIndex="1" />
-                <TextField fx:id="adresseClientField" promptText="Adresse" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                <TextField fx:id="telephoneClientField" promptText="Téléphone" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="3" />
-                <ChoiceBox fx:id="statutChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="nomClientField" promptText="Nom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="prenomClientField" promptText="Prénom" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Date de naissance :" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <DatePicker fx:id="dateNaissanceClientPicker" prefWidth="200.0" promptText="Date de naissance" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <Label text="Adresse :" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <TextField fx:id="adresseClientField" promptText="Adresse" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                <Label text="Téléphone :" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <TextField fx:id="telephoneClientField" promptText="Téléphone" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                <Label text="Statut :" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                <ChoiceBox fx:id="statutChoiceBox" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="1" />
             </children>
         </GridPane>
         <Button mnemonicParsing="false" onAction="#handleAjouterClient" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Ajouter">

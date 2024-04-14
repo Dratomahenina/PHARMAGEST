@@ -51,20 +51,12 @@
                                 <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
                             </padding>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleShowAllFournisseurs" style="-fx-background-color: #1E88E5; -fx-text-fill: white;" text="Afficher tous les fournisseurs">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <padding>
-                                <Insets bottom="8.0" left="16.0" right="16.0" top="8.0" />
-                            </padding>
-                        </Button>
                     </children>
                 </HBox>
                 <TableView fx:id="fournisseurTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="idFournisseurColumn" prefWidth="75.0" text="Référence"/>
-                        <TableColumn fx:id="nomFournisseurColumn" prefWidth="122.4000244140625" text="Nom"/>
+                        <TableColumn fx:id="idFournisseurColumn" prefWidth="75.0" text="Référence" />
+                        <TableColumn fx:id="nomFournisseurColumn" prefWidth="122.4000244140625" text="Nom" />
                         <TableColumn fx:id="emailFournisseurColumn" prefWidth="175.2000274658203" text="Email" />
                         <TableColumn fx:id="telFournisseurColumn" prefWidth="139.20001220703125" text="Téléphone" />
                         <TableColumn fx:id="adresseFournisseurColumn" maxWidth="200.800048828125" minWidth="0.0" prefWidth="98.39996337890625" text="Adresse" />

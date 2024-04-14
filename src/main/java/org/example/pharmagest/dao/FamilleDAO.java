@@ -87,4 +87,25 @@ public class FamilleDAO {
         }
         return searchResults;
     }
+
+    public Famille getFamilleById(int familleId) {
+        Famille famille = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM famille WHERE id_famille = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, familleId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                famille = new Famille(
+                        rs.getInt("id_famille"),
+                        rs.getString("nom_famille"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return famille;
+    }
 }

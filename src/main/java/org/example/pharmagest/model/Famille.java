@@ -10,6 +10,11 @@ public class Famille {
     private StringProperty statut;
     private ObjectProperty<LocalDate> dateCreation;
 
+    @Override
+    public String toString() {
+        return this.getNomFamille();
+    }
+
     public Famille(int idFamille, String nomFamille, String statut, LocalDate dateCreation) {
         this.idFamille = new SimpleIntegerProperty(idFamille);
         this.nomFamille = new SimpleStringProperty(nomFamille);

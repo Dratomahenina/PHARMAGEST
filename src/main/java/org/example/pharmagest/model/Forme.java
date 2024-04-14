@@ -10,6 +10,11 @@ public class Forme {
     private StringProperty statut;
     private ObjectProperty<LocalDate> dateCreation;
 
+    @Override
+    public String toString() {
+        return this.getNomForme();
+    }
+
     public Forme(int idForme, String nomForme, String statut, LocalDate dateCreation) {
         this.idForme = new SimpleIntegerProperty(idForme);
         this.nomForme = new SimpleStringProperty(nomForme);
