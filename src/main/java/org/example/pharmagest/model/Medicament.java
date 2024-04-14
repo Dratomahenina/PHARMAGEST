@@ -9,16 +9,20 @@ public class Medicament {
     private ObjectProperty<Fournisseur> fournisseur;
     private ObjectProperty<Famille> famille;
     private ObjectProperty<Forme> forme;
+    private IntegerProperty quantiteMedicament;
+    private DoubleProperty prixVente;
     private StringProperty statut;
 
     public Medicament(int idMedicament, String nomMedicament, String descriptionMedicament,
-                      Fournisseur fournisseur, Famille famille, Forme forme, String statut) {
+                      Fournisseur fournisseur, Famille famille, Forme forme, int quantiteMedicament, double prixVente, String statut) {
         this.idMedicament = new SimpleIntegerProperty(idMedicament);
         this.nomMedicament = new SimpleStringProperty(nomMedicament);
         this.descriptionMedicament = new SimpleStringProperty(descriptionMedicament);
         this.fournisseur = new SimpleObjectProperty<>(fournisseur);
         this.famille = new SimpleObjectProperty<>(famille);
         this.forme = new SimpleObjectProperty<>(forme);
+        this.quantiteMedicament = new SimpleIntegerProperty(quantiteMedicament);
+        this.prixVente = new SimpleDoubleProperty(prixVente);
         this.statut = new SimpleStringProperty(statut);
     }
 
@@ -95,6 +99,31 @@ public class Medicament {
     public void setForme(Forme forme) {
         this.forme.set(forme);
     }
+
+    public int getQuantiteMedicament() {
+        return quantiteMedicament.get();
+    }
+
+    public IntegerProperty quantiteMedicamentProperty() {
+        return quantiteMedicament;
+    }
+
+    public void setQuantiteMedicament(int quantiteMedicament) {
+        this.quantiteMedicament.set(quantiteMedicament);
+    }
+
+    public double getPrixVente() {
+        return prixVente.get();
+    }
+
+    public DoubleProperty prixVenteProperty() {
+        return prixVente;
+    }
+
+    public void setPrixVente(double prixVente) {
+        this.prixVente.set(prixVente);
+    }
+
 
     public String getStatut() {
         return statut.get();

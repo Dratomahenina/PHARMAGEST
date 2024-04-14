@@ -30,6 +30,12 @@ public class ModifierMedicamentController {
     private ChoiceBox<Forme> formeChoiceBox;
 
     @FXML
+    private TextField quantiteMedicamentField;
+
+    @FXML
+    private TextField prixVenteField;
+
+    @FXML
     private ChoiceBox<String> statutChoiceBox;
 
     private MedicamentDAO medicamentDAO;
@@ -66,6 +72,8 @@ public class ModifierMedicamentController {
         fournisseurChoiceBox.setValue(medicament.getFournisseur());
         familleChoiceBox.setValue(medicament.getFamille());
         formeChoiceBox.setValue(medicament.getForme());
+        quantiteMedicamentField.setText(String.valueOf(medicament.getQuantiteMedicament()));
+        prixVenteField.setText(String.valueOf(medicament.getPrixVente()));
         statutChoiceBox.setValue(medicament.getStatut());
     }
 
@@ -76,6 +84,8 @@ public class ModifierMedicamentController {
         Fournisseur fournisseur = fournisseurChoiceBox.getValue();
         Famille famille = familleChoiceBox.getValue();
         Forme forme = formeChoiceBox.getValue();
+        int quantiteMedicament = Integer.parseInt(quantiteMedicamentField.getText());
+        double prixVente = Double.parseDouble(prixVenteField.getText());
         String statut = statutChoiceBox.getValue();
 
         medicament.setNomMedicament(nomMedicament);
@@ -83,6 +93,8 @@ public class ModifierMedicamentController {
         medicament.setFournisseur(fournisseur);
         medicament.setFamille(famille);
         medicament.setForme(forme);
+        medicament.setQuantiteMedicament(quantiteMedicament);
+        medicament.setPrixVente(prixVente);
         medicament.setStatut(statut);
 
         medicamentDAO.updateMedicament(medicament);

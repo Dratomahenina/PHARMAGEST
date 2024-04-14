@@ -52,6 +52,8 @@ public class MedicamentDAO {
                         new Fournisseur(rs.getInt("id_fournisseur"), rs.getString("nom_fournisseur"), null, null, null, null, null),
                         new Famille(rs.getInt("id_famille"), rs.getString("nom_famille"), null, null),
                         new Forme(rs.getInt("id_forme"), rs.getString("nom_forme"), null, null),
+                        rs.getInt("quantite_medicament"),
+                        rs.getDouble("prix_vente"),
                         rs.getString("statut")
                 );
                 medicaments.add(medicament);
@@ -121,6 +123,8 @@ public class MedicamentDAO {
                         new Fournisseur(rs.getInt("id_fournisseur"), rs.getString("nom_fournisseur"), null, null, null, null, null),
                         new Famille(rs.getInt("id_famille"), rs.getString("nom_famille"), null, null),
                         new Forme(rs.getInt("id_forme"), rs.getString("nom_forme"), null, null),
+                        rs.getInt("quantite_medicament"),
+                        rs.getDouble("prix_vente"),
                         rs.getString("statut")
                 );
                 searchResults.add(medicament);

@@ -56,13 +56,15 @@
                 <TableView fx:id="medicamentTable" prefHeight="500.0" prefWidth="996.0" style="-fx-background-color: white;">
                     <columns>
                         <TableColumn fx:id="idMedicamentColumn" prefWidth="50.0" text="ID" />
-                        <TableColumn fx:id="nomMedicamentColumn" prefWidth="176.79998779296875" text="Nom" />
-                        <TableColumn fx:id="descriptionMedicamentColumn" prefWidth="194.3999786376953" text="Description" />
-                        <TableColumn fx:id="fournisseurColumn" prefWidth="134.4000244140625" text="Fournisseur" />
-                        <TableColumn fx:id="familleColumn" prefWidth="118.39996337890625" text="Famille" />
-                        <TableColumn fx:id="formeColumn" prefWidth="128.0" text="Forme" />
-                        <TableColumn fx:id="statutColumn" prefWidth="84.7999267578125" text="Statut" />
-                        <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="71.199951171875" text="Action" />
+                        <TableColumn fx:id="nomMedicamentColumn" prefWidth="103.99996948242188" text="Nom" />
+                        <TableColumn fx:id="descriptionMedicamentColumn" prefWidth="163.19993591308594" text="Description" />
+                        <TableColumn fx:id="fournisseurColumn" prefWidth="137.60003662109375" text="Fournisseur" />
+                        <TableColumn fx:id="familleColumn" prefWidth="119.99993896484375" text="Famille" />
+                        <TableColumn fx:id="formeColumn" prefWidth="110.4000244140625" text="Forme" />
+                        <TableColumn fx:id="quantiteMedicamentColumn" prefWidth="65.60003662109375" text="Quantité" />
+                        <TableColumn fx:id="prixVenteColumn" prefWidth="61.60009765625" text="Prix" />
+                        <TableColumn fx:id="statutColumn" prefWidth="68.79998779296875" text="Statut" />
+                        <TableColumn fx:id="actionColumn" maxWidth="4000.0" prefWidth="74.4000244140625" text="Action" />
                     </columns>
                 </TableView>
             </children>

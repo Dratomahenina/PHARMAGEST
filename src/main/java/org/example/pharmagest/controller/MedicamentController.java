@@ -43,6 +43,12 @@ public class MedicamentController {
     private TableColumn<Medicament, String> formeColumn;
 
     @FXML
+    private TableColumn<Medicament, Integer> quantiteMedicamentColumn;
+
+    @FXML
+    private TableColumn<Medicament, Double> prixVenteColumn;
+
+    @FXML
     private TableColumn<Medicament, String> statutColumn;
 
     @FXML
@@ -67,6 +73,8 @@ public class MedicamentController {
         fournisseurColumn.setCellValueFactory(cellData -> cellData.getValue().getFournisseur().nomFournisseurProperty());
         familleColumn.setCellValueFactory(cellData -> cellData.getValue().getFamille().nomFamilleProperty());
         formeColumn.setCellValueFactory(cellData -> cellData.getValue().getForme().nomFormeProperty());
+        quantiteMedicamentColumn.setCellValueFactory(new PropertyValueFactory<>("quantiteMedicament"));
+        prixVenteColumn.setCellValueFactory(new PropertyValueFactory<>("prixVente"));
         statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
 
         // Configurer la colonne "Action"

@@ -30,6 +30,12 @@ public class AjouterMedicamentController {
     private ChoiceBox<Forme> formeChoiceBox;
 
     @FXML
+    private TextField quantiteMedicamentField;
+
+    @FXML
+    private TextField prixVenteField;
+
+    @FXML
     private ChoiceBox<String> statutChoiceBox;
 
     private MedicamentDAO medicamentDAO;
@@ -62,9 +68,11 @@ public class AjouterMedicamentController {
         Fournisseur fournisseur = fournisseurChoiceBox.getValue();
         Famille famille = familleChoiceBox.getValue();
         Forme forme = formeChoiceBox.getValue();
+        int quantiteMedicament = Integer.parseInt(quantiteMedicamentField.getText());
+        double prixVente = Double.parseDouble(prixVenteField.getText());
         String statut = statutChoiceBox.getValue();
 
-        Medicament medicament = new Medicament(0, nomMedicament, descriptionMedicament, fournisseur, famille, forme, statut);
+        Medicament medicament = new Medicament(0, nomMedicament, descriptionMedicament, fournisseur, famille, forme, quantiteMedicament, prixVente, statut);
         medicamentDAO.addMedicament(medicament);
 
         if (medicamentController != null) {

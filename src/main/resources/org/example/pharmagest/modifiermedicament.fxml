@@ -49,6 +49,12 @@
                 <Label text="Forme :" GridPane.rowIndex="4" GridPane.columnIndex="0" />
                 <ChoiceBox fx:id="formeChoiceBox" prefWidth="200.0" GridPane.rowIndex="4" GridPane.columnIndex="1" />
 
+                <Label text="Quantité :" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+                <TextField fx:id="quantiteMedicamentField" promptText="Quantité" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+
+                <Label text="Prix :" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+                <TextField fx:id="prixVenteField" promptText="Prix" style="-fx-background-color: white; -fx-border-color: #BDBDBD; -fx-border-width: 0 0 2 0;" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+
                 <Label text="Statut :" GridPane.rowIndex="5" GridPane.columnIndex="0" />
                 <ChoiceBox fx:id="statutChoiceBox" prefWidth="200.0" GridPane.rowIndex="5" GridPane.columnIndex="1" />
             </children>
