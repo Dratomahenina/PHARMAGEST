@@ -70,9 +70,10 @@ public class AjouterMedicamentController {
         Forme forme = formeChoiceBox.getValue();
         int quantiteMedicament = Integer.parseInt(quantiteMedicamentField.getText());
         double prixVente = Double.parseDouble(prixVenteField.getText());
+        double prixFournisseur = 0.0;
         String statut = statutChoiceBox.getValue();
 
-        Medicament medicament = new Medicament(0, nomMedicament, descriptionMedicament, fournisseur, famille, forme, quantiteMedicament, prixVente, statut);
+        Medicament medicament = new Medicament(0, nomMedicament, descriptionMedicament, fournisseur, famille, forme, quantiteMedicament, prixVente, prixFournisseur, statut);
         medicamentDAO.addMedicament(medicament);
 
         if (medicamentController != null) {

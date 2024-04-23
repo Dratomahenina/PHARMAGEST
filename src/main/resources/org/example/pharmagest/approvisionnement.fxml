@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.ApprovisionnementController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <HBox prefHeight="50.0" prefWidth="100.0">
+      <children>
+      
+          <Button onAction="#handleRefresh" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;" text="Rafraîchir" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+               <Insets left="100.0" top="5.0" />
+            </HBox.margin>
+         </Button>
+      
+          <HBox alignment="CENTER" prefHeight="70.0" prefWidth="836.0" spacing="10.0" HBox.hgrow="ALWAYS">
+              <Label text="Seuil de quantité :" />
+              <TextField fx:id="seuilField" prefWidth="100.0" />
+              <Button onAction="#handleDefinirSeuil" text="Définir" />
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+          </HBox>
+      </children>
+   </HBox>
+
+    <HBox fx:id="tableContainer" alignment="CENTER" prefHeight="223.0" prefWidth="995.0" spacing="20.0">
+        <TableView fx:id="medicamentTable" maxHeight="250.0" prefHeight="100.0" prefWidth="467.0">
+            <columns>
+                <TableColumn fx:id="nomMedicamentColumn" prefWidth="200.0" text="Médicament" />
+                <TableColumn fx:id="quantiteMedicamentColumn" prefWidth="75.0" text="Quantité" />
+                <TableColumn fx:id="prixVenteColumn" prefWidth="75.0" text="Prix Vente" />
+                <TableColumn fx:id="prixFournisseurColumn" prefWidth="100.0" text="Prix Fournisseur" />
+            </columns>
+        </TableView>
+
+        <VBox maxHeight="300.0" prefHeight="200.0" prefWidth="508.0" spacing="10.0" style="-fx-padding: 20px; -fx-background-color: #f4f4f4;">
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Formulaire d'Approvisionnement" />
+
+            <GridPane hgap="10.0" vgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
+                </columnConstraints>
+
+                <Label text="Médicament :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="nomMedicamentLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Quantité Actuelle :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label fx:id="quantiteActuelleLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Quantité à Commander :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="quantiteCommanderField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Prix Fournisseur :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <TextField fx:id="prixFournisseurField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                <Label text="Date d'Approvisionnement :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <DatePicker fx:id="dateApprovisionementField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="Commentaire :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <TextArea fx:id="commentaireField" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <Button onAction="#handleValiderApprovisionnement" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;" text="Valider Approvisionnement" />
+        </VBox>
+    </HBox>
+
+    <Label text="Liste des Approvisionnements">
+        <font>
+            <Font size="18.0" />
+        </font>
+    </Label>
+   <HBox prefHeight="190.0" prefWidth="995.0">
+      <children>
+      
+                      <TableView fx:id="approvisionnementTable" prefHeight="100.0" prefWidth="524.0">
+              <columns>
+                  <TableColumn fx:id="idApprovisionnementColumn" prefWidth="75.0" text="ID" />
+                  <TableColumn fx:id="medicamentApprovisionnementColumn" prefWidth="150.0" text="Médicament" />
+                  <TableColumn fx:id="quantiteApprovisionnementColumn" prefWidth="75.0" text="Quantité" />
+                  <TableColumn fx:id="dateApprovisionnementColumn" prefWidth="100.0" text="Date" />
+                  <TableColumn fx:id="statutApprovisionnementColumn" prefWidth="100.0" text="Statut" />
+              </columns>
+          </TableView>
+      
+                      <HBox alignment="CENTER" maxWidth="510.0" prefHeight="100.0" prefWidth="510.0" spacing="20.0">
+              <Button onAction="#handleValiderReceptionApprovisionnement" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;" text="Valider Réception">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin></Button>
+              <Button onAction="#handleSupprimerApprovisionnement" prefHeight="36.0" prefWidth="225.0" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;" text="Supprimer Approvisionnement" />
+          </HBox>
+      </children>
+   </HBox>
+
+</VBox>

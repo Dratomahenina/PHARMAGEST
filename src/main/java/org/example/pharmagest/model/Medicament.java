@@ -11,10 +11,11 @@ public class Medicament {
     private ObjectProperty<Forme> forme;
     private IntegerProperty quantiteMedicament;
     private DoubleProperty prixVente;
+    private DoubleProperty prixFournisseur;
     private StringProperty statut;
 
     public Medicament(int idMedicament, String nomMedicament, String descriptionMedicament,
-                      Fournisseur fournisseur, Famille famille, Forme forme, int quantiteMedicament, double prixVente, String statut) {
+                      Fournisseur fournisseur, Famille famille, Forme forme, int quantiteMedicament, double prixVente, double prixFournisseur, String statut) {
         this.idMedicament = new SimpleIntegerProperty(idMedicament);
         this.nomMedicament = new SimpleStringProperty(nomMedicament);
         this.descriptionMedicament = new SimpleStringProperty(descriptionMedicament);
@@ -23,6 +24,7 @@ public class Medicament {
         this.forme = new SimpleObjectProperty<>(forme);
         this.quantiteMedicament = new SimpleIntegerProperty(quantiteMedicament);
         this.prixVente = new SimpleDoubleProperty(prixVente);
+        this.prixFournisseur = new SimpleDoubleProperty(prixFournisseur);
         this.statut = new SimpleStringProperty(statut);
     }
 
@@ -124,6 +126,17 @@ public class Medicament {
         this.prixVente.set(prixVente);
     }
 
+    public double getPrixFournisseur() {
+        return prixFournisseur.get();
+    }
+
+    public DoubleProperty prixFournisseurProperty() {
+        return prixFournisseur;
+    }
+
+    public void setPrixFournisseur(double prixFournisseur) {
+        this.prixFournisseur.set(prixFournisseur);
+    }
 
     public String getStatut() {
         return statut.get();
