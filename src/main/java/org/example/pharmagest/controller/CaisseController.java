@@ -3,79 +3,109 @@ package org.example.pharmagest.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.example.pharmagest.dao.VenteDAO;
-import org.example.pharmagest.dao.VenteMedicamentDAO;
-import org.example.pharmagest.model.Vente;
+import org.example.pharmagest.dao.CaisseDAO;
 import org.example.pharmagest.model.VenteMedicament;
+import org.example.pharmagest.model.Vente;
+import org.example.pharmagest.model.Client;
 import org.example.pharmagest.utils.FacturePDF;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 
 public class CaisseController {
 
     @FXML
-    private TableView<VenteMedicament> venteTableView;
+    private TableView<VenteMedicament> venteMedicamentTableView;
     @FXML
-    private TableColumn<VenteMedicament, Integer> idVenteColumn;
+    private TableColumn<VenteMedicament, Integer> idVenteMedicamentColumn;
     @FXML
-    private TableColumn<VenteMedicament, String> medicamentColumn;
+    private TableColumn<VenteMedicament, String> nomClientColumn;
+    @FXML
+    private TableColumn<VenteMedicament, String> prenomClientColumn;
+    @FXML
+    private TableColumn<VenteMedicament, String> nomMedicamentColumn;
     @FXML
     private TableColumn<VenteMedicament, Integer> quantiteColumn;
     @FXML
     private TableColumn<VenteMedicament, Double> prixUnitaireColumn;
     @FXML
-    private TableColumn<VenteMedicament, Double> prixTotalColumn;
+    private TableColumn<VenteMedicament, Double> totalColumn;
     @FXML
-    private TableColumn<VenteMedicament, LocalDateTime> dateVenteColumn;
+    private TableColumn<VenteMedicament, String> typeVenteColumn;
     @FXML
-    private Label detailsVenteLabel;
+    private TableColumn<VenteMedicament, String> statutColumn;
+    @FXML
+    private Label detailsCommandeLabel;
     @FXML
     private Label montantTotalLabel;
     @FXML
     private Label remiseLabel;
     @FXML
     private Label montantFinalLabel;
-
-    private ObservableList<VenteMedicament> venteList;
-    private VenteMedicamentDAO venteMedicamentDAO;
-    private VenteDAO venteDAO;
-    private VenteMedicament venteSelectionne;
-
     @FXML
     private TextField montantDonneTextField;
-
     @FXML
     private Label montantRenduLabel;
 
+    private ObservableList<VenteMedicament> venteMedicamentList;
+    private CaisseDAO caisseDAO;
+    private VenteMedicament venteMedicamentSelectionne;
+
     @FXML
     public void initialize() {
-        venteMedicamentDAO = new VenteMedicamentDAO();
-        venteDAO = new VenteDAO();
-        venteList = FXCollections.observableArrayList(venteMedicamentDAO.getAllVenteMedicamentsNonPayes());
+        caisseDAO = new CaisseDAO();
+        venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicaments());
 
-        idVenteColumn.setCellValueFactory(new PropertyValueFactory<>("idVente"));
-        medicamentColumn.setCellValueFactory(cellData -> cellData.getValue().getMedicament().nomMedicamentProperty());
+        idVenteMedicamentColumn.setCellValueFactory(new PropertyValueFactory<>("idVenteMedicament"));
+        nomClientColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getClient() != null) {
+                return cellData.getValue().getClient().nomClientProperty();
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        prenomClientColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getClient() != null) {
+                return cellData.getValue().getClient().prenomClientProperty();
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
+        nomMedicamentColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getMedicament() != null) {
+                return cellData.getValue().getMedicament().nomMedicamentProperty();
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
         quantiteColumn.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         prixUnitaireColumn.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
-        prixTotalColumn.setCellValueFactory(cellData -> cellData.getValue().prixTotalProperty().asObject());
-        dateVenteColumn.setCellValueFactory(new PropertyValueFactory<>("dateVente"));
+        totalColumn.setCellValueFactory(cellData -> cellData.getValue().prixTotalProperty().asObject());
+        typeVenteColumn.setCellValueFactory(new PropertyValueFactory<>("typeVente"));
+        statutColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getVente() != null) {
+                return cellData.getValue().getVente().statutProperty();
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
 
-        venteTableView.setItems(venteList);
+        venteMedicamentTableView.setItems(venteMedicamentList);
 
-        venteTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        venteMedicamentTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                venteSelectionne = venteTableView.getSelectionModel().getSelectedItem();
-                Vente vente = venteDAO.getVenteByIdVente(venteSelectionne.getIdVente());
-                detailsVenteLabel.setText("Détails de la vente : " + vente.getIdVente() + " - Client : " + vente.getClient().getNomClient() + " " + vente.getClient().getPrenomClient() + " - Type de Vente : " + vente.getTypeVente());
+                venteMedicamentSelectionne = venteMedicamentTableView.getSelectionModel().getSelectedItem();
+                Vente vente = venteMedicamentSelectionne.getVente();
+                Client client = vente.getClient();
+                if (client != null) {
+                    detailsCommandeLabel.setText("Détails de la commande : " + vente.getIdVente() +
+                            " - Client : " + client.getNomClient() + " " + client.getPrenomClient());
+                } else {
+                    detailsCommandeLabel.setText("Détails de la commande : " + vente.getIdVente() +
+                            " - Client : Client non disponible");
+                }
                 montantTotalLabel.setText(String.format("%.2f", vente.getMontantTotal()));
                 remiseLabel.setText(String.format("%.2f", vente.getRemise()));
                 montantFinalLabel.setText(String.format("%.2f", vente.getMontantTotal() - vente.getRemise()));
@@ -85,18 +115,17 @@ public class CaisseController {
 
     @FXML
     private void handleValiderPaiement() {
-        if (venteSelectionne != null) {
+        if (venteMedicamentSelectionne != null) {
+            Vente vente = venteMedicamentSelectionne.getVente();
             double montantDonne = Double.parseDouble(montantDonneTextField.getText().replace(",", "."));
-            Vente vente = venteDAO.getVenteByIdVente(venteSelectionne.getIdVente());
             double montantFinal = vente.getMontantTotal() - vente.getRemise();
 
             if (montantDonne >= montantFinal) {
                 double montantRendu = montantDonne - montantFinal;
                 montantRenduLabel.setText(String.format("%.2f", montantRendu));
 
-                vente.setStatut("Payée");
-                vente.setDatePaiement(LocalDateTime.now());
-                venteDAO.updateVente(vente);
+                caisseDAO.updateVenteStatut(vente.getIdVente(), "Payée");
+                caisseDAO.updateVenteDatePaiement(vente.getIdVente(), LocalDateTime.now());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Paiement validé");
@@ -104,14 +133,13 @@ public class CaisseController {
                 alert.setContentText("Le paiement a été validé avec succès.");
                 alert.showAndWait();
 
-                // Rafraîchir la liste des ventes
-                venteList = FXCollections.observableArrayList(venteMedicamentDAO.getAllVenteMedicamentsNonPayes());
-                venteTableView.setItems(venteList);
+                venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicaments());
+                venteMedicamentTableView.setItems(venteMedicamentList);
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Montant insuffisant");
                 alert.setHeaderText(null);
-                alert.setContentText("Le montant donné est insuffisant pour régler la vente.");
+                alert.setContentText("Le montant donné est insuffisant pour régler la commande.");
                 alert.showAndWait();
             }
         }
@@ -119,8 +147,8 @@ public class CaisseController {
 
     @FXML
     private void handleImprimerFacture() {
-        if (venteSelectionne != null) {
-            Vente vente = venteDAO.getVenteByIdVente(venteSelectionne.getIdVente());
+        if (venteMedicamentSelectionne != null) {
+            Vente vente = venteMedicamentSelectionne.getVente();
             if (vente.getStatut().equals("Payée")) {
                 try {
                     FacturePDF.genererFacturePDF(vente);
@@ -138,29 +166,11 @@ public class CaisseController {
                 }
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Vente non sélectionnée");
+                alert.setTitle("Commande non payée");
                 alert.setHeaderText(null);
-                alert.setContentText("Veuillez sélectionner une vente payée dans la liste pour imprimer la facture.");
+                alert.setContentText("Veuillez sélectionner une commande payée pour imprimer la facture.");
                 alert.showAndWait();
             }
-        }
-    }
-
-    @FXML
-    private void handleAfficherCommandesPayees() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/commandespayees.fxml"));
-            Parent root = loader.load();
-            CommandesPayeesController commandesPayeesController = loader.getController();
-            commandesPayeesController.setVenteDAO(venteDAO);
-
-            Stage stage = new Stage();
-            stage.setTitle("Commandes Payées");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

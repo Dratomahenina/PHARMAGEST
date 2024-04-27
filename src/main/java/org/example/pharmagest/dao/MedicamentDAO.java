@@ -77,13 +77,22 @@ public class MedicamentDAO {
             stmt.setInt(1, medicamentId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
+                int fournisseurId = rs.getInt("id_fournisseur");
+                Fournisseur fournisseur = fournisseurId != 0 ? new FournisseurDAO().getFournisseurById(fournisseurId) : null;
+
+                int familleId = rs.getInt("id_famille");
+                Famille famille = familleId != 0 ? new FamilleDAO().getFamilleById(familleId) : null;
+
+                int formeId = rs.getInt("id_forme");
+                Forme forme = formeId != 0 ? new FormeDAO().getFormeById(formeId) : null;
+
                 medicament = new Medicament(
                         rs.getInt("id_medicament"),
                         rs.getString("nom_medicament"),
                         rs.getString("description_medicament"),
-                        new FournisseurDAO().getFournisseurById(rs.getInt("id_fournisseur")),
-                        new FamilleDAO().getFamilleById(rs.getInt("id_famille")),
-                        new FormeDAO().getFormeById(rs.getInt("id_forme")),
+                        fournisseur,
+                        famille,
+                        forme,
                         rs.getInt("quantite_medicament"),
                         rs.getDouble("prix_vente"),
                         rs.getDouble("prix_fournisseur"),

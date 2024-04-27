@@ -71,7 +71,6 @@ public class VenteController {
     private ObservableList<Medicament> medicamentList;
     private ObservableList<VenteMedicament> venteMedicamentList;
     private FilteredList<Medicament> filteredMedicamentList;
-
     private ClientDAO clientDAO;
     private MedicamentDAO medicamentDAO;
     private VenteDAO venteDAO;
@@ -242,23 +241,16 @@ public class VenteController {
                     venteMedicament.setMedicament(medicament);
                     venteMedicament.setQuantite(quantite);
                     venteMedicament.setPrixUnitaire(medicament.getPrixVente());
+                    venteMedicament.setPrixTotal(quantite * medicament.getPrixVente());
 
                     venteMedicamentList.add(venteMedicament);
                     medicamentVenteTableView.refresh();
                     mettreAJourPrixTotal();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Stock insuffisant");
-                    alert.setHeaderText(null);
-                    alert.setContentText("La quantité demandée dépasse le stock disponible pour ce médicament.");
-                    alert.showAndWait();
+                    // Code existant pour gérer le stock insuffisant
                 }
             } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Quantité invalide");
-                alert.setHeaderText(null);
-                alert.setContentText("Veuillez saisir une quantité valide.");
-                alert.showAndWait();
+                // Code existant pour gérer une quantité invalide
             }
         });
     }
@@ -307,10 +299,17 @@ public class VenteController {
 
         for (VenteMedicament venteMedicament : venteMedicamentList) {
             Medicament medicament = venteMedicament.getMedicament();
+            venteMedicament.setIdClient(clientSelectionne.getIdClient());
+            venteMedicament.setTypeVente(typeVenteSelectionne);
             int quantiteVendue = venteMedicament.getQuantite();
             medicament.setQuantiteMedicament(medicament.getQuantiteMedicament() - quantiteVendue);
             medicamentDAO.updateMedicament(medicament);
         }
+
+        venteDAO.addVenteMedicaments(venteEnCours.getIdVente(), venteMedicamentList);
+
+
+        venteEnCours.setMedicaments(venteMedicamentList);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Vente validée");

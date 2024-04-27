@@ -12,6 +12,10 @@ public class VenteMedicament {
     private DoubleProperty prixUnitaire;
     private DoubleProperty prixTotal;
     private ObjectProperty<LocalDateTime> dateVente;
+    private ObjectProperty<Vente> vente;
+    private IntegerProperty idClient;
+    private StringProperty typeVente;
+    private ObjectProperty<Client> client;
 
     public VenteMedicament() {
         this.idVenteMedicament = new SimpleIntegerProperty();
@@ -21,6 +25,10 @@ public class VenteMedicament {
         this.prixUnitaire = new SimpleDoubleProperty();
         this.prixTotal = new SimpleDoubleProperty();
         this.dateVente = new SimpleObjectProperty<>();
+        this.vente = new SimpleObjectProperty<>();
+        this.idClient = new SimpleIntegerProperty();
+        this.typeVente = new SimpleStringProperty();
+        this.client = new SimpleObjectProperty<>();
     }
 
     // Getters et setters
@@ -108,4 +116,56 @@ public class VenteMedicament {
     public void setDateVente(LocalDateTime dateVente) {
         this.dateVente.set(dateVente);
     }
+
+    public Vente getVente() {
+        return vente.get();
+    }
+
+    public ObjectProperty<Vente> venteProperty() {
+        return vente;
+    }
+
+    public void setVente(Vente vente) {
+        this.vente.set(vente);
+    }
+
+    public int getIdClient() {
+        return idClient.get();
+    }
+
+    public IntegerProperty idClientProperty() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient.set(idClient);
+    }
+
+    public String getTypeVente() {
+        return typeVente.get();
+    }
+
+    public StringProperty typeVenteProperty() {
+        return typeVente;
+    }
+
+    public void setTypeVente(String typeVente) {
+        this.typeVente.set(typeVente);
+    }
+
+    public Client getClient() {
+        return client.get();
+    }
+
+    public ObjectProperty<Client> clientProperty() {
+        if (client == null) {
+            client = new SimpleObjectProperty<>();
+        }
+        return client;
+    }
+
+    public void setClient(Client client) {
+        clientProperty().set(client);
+    }
+
 }

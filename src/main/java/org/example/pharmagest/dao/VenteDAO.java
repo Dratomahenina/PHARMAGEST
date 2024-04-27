@@ -2,6 +2,7 @@ package org.example.pharmagest.dao;
 
 import javafx.collections.ObservableList;
 import org.example.pharmagest.model.Client;
+import org.example.pharmagest.model.Medicament;
 import org.example.pharmagest.model.Vente;
 import org.example.pharmagest.model.VenteMedicament;
 import org.example.pharmagest.utils.DatabaseConnection;
@@ -34,17 +35,17 @@ public class VenteDAO {
             if (rs.next()) {
                 int idVente = rs.getInt(1);
                 vente.setIdVente(idVente);
+                addVenteMedicaments(idVente, vente.getMedicaments()); // Appelez la méthode existante ici
             }
-
-            addVenteMedicaments(vente.getIdVente(), vente.getMedicaments());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void addVenteMedicaments(int idVente, List<VenteMedicament> medicaments) {
+    public void addVenteMedicaments(int idVente, List<VenteMedicament> medicaments) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO vente_medicament (id_vente, id_medicament, quantite, prix_unitaire) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO vente_medicament (id_vente, id_medicament, quantite, prix_unitaire, id_client, type_vente) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
 
             for (VenteMedicament venteMedicament : medicaments) {
@@ -52,6 +53,8 @@ public class VenteDAO {
                 stmt.setInt(2, venteMedicament.getMedicament().getIdMedicament());
                 stmt.setInt(3, venteMedicament.getQuantite());
                 stmt.setDouble(4, venteMedicament.getPrixUnitaire());
+                stmt.setInt(5, venteMedicament.getIdClient());
+                stmt.setString(6, venteMedicament.getTypeVente());
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -134,9 +137,12 @@ public class VenteDAO {
             while (rs.next()) {
                 VenteMedicament venteMedicament = new VenteMedicament();
                 venteMedicament.setIdVenteMedicament(rs.getInt("id_vente_medicament"));
-                venteMedicament.setMedicament(new MedicamentDAO().getMedicamentById(rs.getInt("id_medicament")));
+                Medicament medicament = new MedicamentDAO().getMedicamentById(rs.getInt("id_medicament"));
+                venteMedicament.setMedicament(medicament);
                 venteMedicament.setQuantite(rs.getInt("quantite"));
                 venteMedicament.setPrixUnitaire(rs.getDouble("prix_unitaire"));
+                venteMedicament.setIdClient(rs.getInt("id_client"));
+                venteMedicament.setTypeVente(rs.getString("type_vente"));
                 venteMedicaments.add(venteMedicament);
             }
         } catch (SQLException e) {

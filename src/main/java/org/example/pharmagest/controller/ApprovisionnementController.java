@@ -128,30 +128,6 @@ public class ApprovisionnementController {
             int quantiteRecue = selectedApprovisionnement.getQuantiteCommandee();
             medicament.setQuantiteMedicament(medicament.getQuantiteMedicament() + quantiteRecue);
 
-            Fournisseur fournisseur = medicament.getFournisseur();
-            if (fournisseur != null) {
-                medicament.setFournisseur(fournisseur);
-            } else {
-                // Gérer le cas où le fournisseur est null, par exemple en le récupérant depuis la base de données
-                // ou en affichant un message d'erreur approprié
-            }
-
-            Famille famille = medicament.getFamille();
-            if (famille != null) {
-                medicament.setFamille(famille);
-            } else {
-                // Gérer le cas où la famille est null, par exemple en la récupérant depuis la base de données
-                // ou en affichant un message d'erreur approprié
-            }
-
-            Forme forme = medicament.getForme();
-            if (forme != null) {
-                medicament.setForme(forme);
-            } else {
-                // Gérer le cas où la forme est null, par exemple en la récupérant depuis la base de données
-                // ou en affichant un message d'erreur approprié
-            }
-
             medicamentDAO.updateMedicament(medicament);
 
             selectedApprovisionnement.setStatut("Reçu");
