@@ -69,6 +69,33 @@ public class MedicamentDAO {
         return medicaments;
     }
 
+    public Medicament getMedicamentById(int medicamentId) {
+        Medicament medicament = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM medicament WHERE id_medicament = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, medicamentId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                medicament = new Medicament(
+                        rs.getInt("id_medicament"),
+                        rs.getString("nom_medicament"),
+                        rs.getString("description_medicament"),
+                        new FournisseurDAO().getFournisseurById(rs.getInt("id_fournisseur")),
+                        new FamilleDAO().getFamilleById(rs.getInt("id_famille")),
+                        new FormeDAO().getFormeById(rs.getInt("id_forme")),
+                        rs.getInt("quantite_medicament"),
+                        rs.getDouble("prix_vente"),
+                        rs.getDouble("prix_fournisseur"),
+                        rs.getString("statut")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return medicament;
+    }
+
     public void updateMedicament(Medicament medicament) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             String query = "UPDATE medicament SET nom_medicament = ?, description_medicament = ?, " +

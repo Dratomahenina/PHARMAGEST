@@ -3,6 +3,7 @@ module org.example.pharmagest {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.sql;
+    requires itextpdf;
 
     opens org.example.pharmagest to javafx.fxml;
     exports org.example.pharmagest;

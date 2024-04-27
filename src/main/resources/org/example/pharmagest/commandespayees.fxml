@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.CommandesPayeesController">
+    <TableView fx:id="commandesPayeesTableView" prefHeight="400.0" prefWidth="600.0">
+        <columns>
+            <TableColumn fx:id="idVenteColumn" prefWidth="75.0" text="ID Vente" />
+            <TableColumn fx:id="dateVenteColumn" prefWidth="100.0" text="Date" />
+            <TableColumn fx:id="datePaiementColumn" prefWidth="100.0" text="Date de Paiement" />
+            <TableColumn fx:id="montantTotalColumn" prefWidth="100.0" text="Montant Total" />
+        </columns>
+    </TableView>
+</VBox>

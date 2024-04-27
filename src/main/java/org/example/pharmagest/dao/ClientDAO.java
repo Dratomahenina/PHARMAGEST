@@ -7,6 +7,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ClientDAO {
 
     public void addClient(Client client) {
@@ -104,4 +109,30 @@ public class ClientDAO {
         }
         return searchResults;
     }
+
+    public Client getClientById(int clientId) {
+        Client client = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM client WHERE id_client = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, clientId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        rs.getDate("date_naissance_client").toLocalDate(),
+                        rs.getString("adresse_client"),
+                        rs.getString("telephone_client"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client;
+    }
+
 }

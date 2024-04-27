@@ -14,6 +14,11 @@ public class Client {
     private StringProperty statut;
     private ObjectProperty<LocalDate> dateCreation;
 
+    @Override
+    public String toString() {
+        return nomClient.get() + " " + prenomClient.get();
+    }
+
     public Client(int idClient, String nomClient, String prenomClient, LocalDate dateNaissanceClient, String adresseClient, String telephoneClient, String statut, LocalDate dateCreation) {
         this.idClient = new SimpleIntegerProperty(idClient);
         this.nomClient = new SimpleStringProperty(nomClient);
@@ -120,4 +125,5 @@ public class Client {
     public void setDateCreation(LocalDate dateCreation) {
         this.dateCreation.set(dateCreation);
     }
+
 }

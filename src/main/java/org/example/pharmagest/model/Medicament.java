@@ -14,6 +14,11 @@ public class Medicament {
     private DoubleProperty prixFournisseur;
     private StringProperty statut;
 
+    @Override
+    public String toString() {
+        return nomMedicament.get();
+    }
+
     public Medicament(int idMedicament, String nomMedicament, String descriptionMedicament,
                       Fournisseur fournisseur, Famille famille, Forme forme, int quantiteMedicament, double prixVente, double prixFournisseur, String statut) {
         this.idMedicament = new SimpleIntegerProperty(idMedicament);
