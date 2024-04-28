@@ -4,12 +4,18 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.CommandesPayeesController">
-    <TableView fx:id="commandesPayeesTableView" prefHeight="400.0" prefWidth="600.0">
+    <TableView fx:id="commandesPayeesTableView" prefHeight="400.0" prefWidth="800.0">
         <columns>
-            <TableColumn fx:id="idVenteColumn" prefWidth="75.0" text="ID Vente" />
-            <TableColumn fx:id="dateVenteColumn" prefWidth="100.0" text="Date" />
-            <TableColumn fx:id="datePaiementColumn" prefWidth="100.0" text="Date de Paiement" />
-            <TableColumn fx:id="montantTotalColumn" prefWidth="100.0" text="Montant Total" />
+            <TableColumn fx:id="idVenteColumn" prefWidth="100.0" text="ID Vente" />
+            <TableColumn fx:id="nomClientColumn" prefWidth="150.0" text="Nom Client" />
+            <TableColumn fx:id="prenomClientColumn" prefWidth="150.0" text="Prénom Client" />
+            <TableColumn fx:id="nomMedicamentColumn" prefWidth="150.0" text="Médicament" />
+            <TableColumn fx:id="quantiteColumn" prefWidth="75.0" text="Quantité" />
+            <TableColumn fx:id="prixUnitaireColumn" prefWidth="100.0" text="Prix Unitaire" />
+            <TableColumn fx:id="totalColumn" prefWidth="100.0" text="Total" />
+            <TableColumn fx:id="typeVenteColumn" prefWidth="100.0" text="Type de Vente" />
+            <TableColumn fx:id="datePaiementColumn" prefWidth="150.0" text="Date Paiement" />
+            <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action" />
         </columns>
     </TableView>
 </VBox>

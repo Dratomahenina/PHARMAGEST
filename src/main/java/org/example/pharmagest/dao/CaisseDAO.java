@@ -88,6 +88,82 @@ public class CaisseDAO {
         return venteMedicaments;
     }
 
+    public List<VenteMedicament> getAllVenteMedicamentsEnAttente() {
+        List<VenteMedicament> venteMedicaments = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT vm.*, v.*, c.nom_client, c.prenom_client, m.nom_medicament " +
+                    "FROM vente_medicament vm " +
+                    "JOIN vente v ON vm.id_vente = v.id_vente " +
+                    "JOIN client c ON vm.id_client = c.id_client " +
+                    "JOIN medicament m ON vm.id_medicament = m.id_medicament " +
+                    "WHERE v.statut = 'En attente'";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                VenteMedicament venteMedicament = new VenteMedicament();
+                venteMedicament.setIdVenteMedicament(rs.getInt("id_vente_medicament"));
+                venteMedicament.setQuantite(rs.getInt("quantite"));
+                venteMedicament.setPrixUnitaire(rs.getDouble("prix_unitaire"));
+                venteMedicament.setPrixTotal(rs.getInt("quantite") * rs.getDouble("prix_unitaire")); // Calculer le prix total
+                venteMedicament.setTypeVente(rs.getString("type_vente"));
+
+                Vente vente = new Vente();
+                vente.setIdVente(rs.getInt("id_vente"));
+
+                Date dateVenteSQL = rs.getDate("date_vente");
+                if (dateVenteSQL != null) {
+                    vente.setDateVente(dateVenteSQL.toLocalDate());
+                }
+
+                vente.setTypeVente(rs.getString("type_vente"));
+                vente.setStatut(rs.getString("statut"));
+                vente.setMontantTotal(rs.getDouble("montant_total"));
+                vente.setRemise(rs.getDouble("remise"));
+
+                Timestamp datePaiement = rs.getTimestamp("date_paiement");
+                if (datePaiement != null) {
+                    vente.setDatePaiement(datePaiement.toLocalDateTime());
+                } else {
+                    vente.setDatePaiement(null);
+                }
+
+                Client client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        null, // Vous n'avez pas de date de naissance dans votre requête
+                        null, // Vous n'avez pas d'adresse dans votre requête
+                        null, // Vous n'avez pas de téléphone dans votre requête
+                        null, // Vous n'avez pas de statut dans votre requête
+                        null  // Vous n'avez pas de date de création dans votre requête
+                );
+
+                Medicament medicament = new Medicament(
+                        rs.getInt("id_medicament"),
+                        rs.getString("nom_medicament"),
+                        null, // Vous n'avez pas de description dans votre requête
+                        null, // Vous n'avez pas de fournisseur dans votre requête
+                        null, // Vous n'avez pas de famille dans votre requête
+                        null, // Vous n'avez pas de forme dans votre requête
+                        0,    // Vous n'avez pas de quantité dans votre requête
+                        0.0,  // Vous n'avez pas de prix de vente dans votre requête
+                        0.0,  // Vous n'avez pas de prix fournisseur dans votre requête
+                        null  // Vous n'avez pas de statut dans votre requête
+                );
+
+                venteMedicament.setVente(vente);
+                venteMedicament.setClient(client);
+                venteMedicament.setMedicament(medicament);
+
+                venteMedicaments.add(venteMedicament);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return venteMedicaments;
+    }
+
     public void updateVenteStatut(int idVente, String statut) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             String query = "UPDATE vente SET statut = ? WHERE id_vente = ?";
@@ -111,4 +187,55 @@ public class CaisseDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Vente> getVentesPayees() {
+        List<Vente> ventesPayees = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM vente WHERE statut = 'Payée'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Vente vente = new Vente();
+                vente.setIdVente(rs.getInt("id_vente"));
+                vente.setClient(new ClientDAO().getClientById(rs.getInt("id_client")));
+                Date dateVente = rs.getDate("date_vente");
+                if (dateVente != null) {
+                    vente.setDateVente(dateVente.toLocalDate());
+                }
+                vente.setTypeVente(rs.getString("type_vente"));
+                vente.setStatut(rs.getString("statut"));
+                vente.setMontantTotal(rs.getDouble("montant_total"));
+                vente.setRemise(rs.getDouble("remise"));
+                Timestamp datePaiement = rs.getTimestamp("date_paiement");
+                if (datePaiement != null) {
+                    vente.setDatePaiement(datePaiement.toLocalDateTime());
+                }
+
+                ventesPayees.add(vente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ventesPayees;
+    }
+
+    public void supprimerVente(Vente vente) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Suppression des enregistrements liés dans la table vente_medicament
+            String deleteVenteMedicamentQuery = "DELETE FROM vente_medicament WHERE id_vente = ?";
+            PreparedStatement deleteVenteMedicamentStmt = conn.prepareStatement(deleteVenteMedicamentQuery);
+            deleteVenteMedicamentStmt.setInt(1, vente.getIdVente());
+            deleteVenteMedicamentStmt.executeUpdate();
+
+            // Suppression de la vente dans la table vente
+            String deleteVenteQuery = "DELETE FROM vente WHERE id_vente = ?";
+            PreparedStatement deleteVenteStmt = conn.prepareStatement(deleteVenteQuery);
+            deleteVenteStmt.setInt(1, vente.getIdVente());
+            deleteVenteStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

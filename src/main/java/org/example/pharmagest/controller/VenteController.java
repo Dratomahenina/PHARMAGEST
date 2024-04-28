@@ -295,6 +295,9 @@ public class VenteController {
         }
         venteEnCours.setRemise(remise);
 
+        // Définir le statut de la vente à "En attente"
+        venteEnCours.setStatut("En attente");
+
         venteDAO.addVente(venteEnCours);
 
         for (VenteMedicament venteMedicament : venteMedicamentList) {
@@ -307,7 +310,6 @@ public class VenteController {
         }
 
         venteDAO.addVenteMedicaments(venteEnCours.getIdVente(), venteMedicamentList);
-
 
         venteEnCours.setMedicaments(venteMedicamentList);
 

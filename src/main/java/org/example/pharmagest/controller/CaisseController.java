@@ -3,14 +3,20 @@ package org.example.pharmagest.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.example.pharmagest.dao.CaisseDAO;
+import org.example.pharmagest.model.Client;
 import org.example.pharmagest.model.VenteMedicament;
 import org.example.pharmagest.model.Vente;
-import org.example.pharmagest.model.Client;
 import org.example.pharmagest.utils.FacturePDF;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -56,7 +62,7 @@ public class CaisseController {
     @FXML
     public void initialize() {
         caisseDAO = new CaisseDAO();
-        venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicaments());
+        venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicamentsEnAttente());
 
         idVenteMedicamentColumn.setCellValueFactory(new PropertyValueFactory<>("idVenteMedicament"));
         nomClientColumn.setCellValueFactory(cellData -> {
@@ -133,7 +139,7 @@ public class CaisseController {
                 alert.setContentText("Le paiement a été validé avec succès.");
                 alert.showAndWait();
 
-                venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicaments());
+                venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicamentsEnAttente());
                 venteMedicamentTableView.setItems(venteMedicamentList);
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -173,4 +179,21 @@ public class CaisseController {
             }
         }
     }
+
+    @FXML
+    private void handleCommandesPayees() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/commandespayees.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Commandes Payées");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
