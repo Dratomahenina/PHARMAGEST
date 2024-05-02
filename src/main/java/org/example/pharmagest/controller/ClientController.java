@@ -52,6 +52,7 @@ public class ClientController {
     @FXML
     public void initialize() {
         // Initialiser les colonnes du tableau
+        clientDAO = new ClientDAO();
         idClientColumn.setCellValueFactory(new PropertyValueFactory<>("idClient"));
         nomClientColumn.setCellValueFactory(new PropertyValueFactory<>("nomClient"));
         prenomClientColumn.setCellValueFactory(new PropertyValueFactory<>("prenomClient"));

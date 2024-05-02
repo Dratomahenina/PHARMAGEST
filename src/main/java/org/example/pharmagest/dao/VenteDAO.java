@@ -1,62 +1,56 @@
 package org.example.pharmagest.dao;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.example.pharmagest.model.Client;
+import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Medicament;
 import org.example.pharmagest.model.Vente;
-import org.example.pharmagest.model.VenteMedicament;
 import org.example.pharmagest.utils.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
 
 public class VenteDAO {
 
-    public void addVente(Vente vente) {
+    public int addVente(Vente vente) {
+        int idVente = 0;
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO vente (id_client, date_vente, type_vente, statut, montant_total, remise) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO vente (id_client, type_vente, montant_total, date_vente, statut) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, vente.getClient().getIdClient());
-            if (vente.getDateVente() != null) {
-                stmt.setDate(2, Date.valueOf(vente.getDateVente()));
+            if (vente.getClient() != null) {
+                stmt.setInt(1, vente.getClient().getIdClient());
             } else {
-                stmt.setDate(2, null);
+                stmt.setNull(1, Types.INTEGER);
             }
-            stmt.setString(3, vente.getTypeVente());
-            stmt.setString(4, vente.getStatut());
-            stmt.setDouble(5, vente.getMontantTotal());
-            stmt.setDouble(6, vente.getRemise());
+            stmt.setString(2, vente.getTypeVente());
+            stmt.setDouble(3, vente.getMontantTotal());
+            stmt.setDate(4, Date.valueOf(vente.getDateVente()));
+            stmt.setString(5, vente.getStatut());
             stmt.executeUpdate();
+
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                int idVente = rs.getInt(1);
-                vente.setIdVente(idVente);
-                addVenteMedicaments(idVente, vente.getMedicaments()); // Appelez la méthode existante ici
+                idVente = rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return idVente;
     }
 
-    public void addVenteMedicaments(int idVente, List<VenteMedicament> medicaments) {
+    public void addLigneVente(LigneVente ligneVente) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO vente_medicament (id_vente, id_medicament, quantite, prix_unitaire, id_client, type_vente) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO ligne_vente (id_vente, id_medicament, quantite, prix_unitaire, prix_total) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
-
-            for (VenteMedicament venteMedicament : medicaments) {
-                stmt.setInt(1, idVente);
-                stmt.setInt(2, venteMedicament.getMedicament().getIdMedicament());
-                stmt.setInt(3, venteMedicament.getQuantite());
-                stmt.setDouble(4, venteMedicament.getPrixUnitaire());
-                stmt.setInt(5, venteMedicament.getIdClient());
-                stmt.setString(6, venteMedicament.getTypeVente());
-                stmt.executeUpdate();
-            }
+            stmt.setInt(1, ligneVente.getIdVente());
+            stmt.setInt(2, ligneVente.getMedicament().getIdMedicament());
+            stmt.setInt(3, ligneVente.getQuantite());
+            stmt.setDouble(4, ligneVente.getPrixUnitaire());
+            stmt.setDouble(5, ligneVente.getPrixTotal());
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,169 +59,110 @@ public class VenteDAO {
     public List<Vente> getAllVentes() {
         List<Vente> ventes = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM vente";
+            String query = "SELECT v.*, c.nom_client, c.prenom_client FROM vente v LEFT JOIN client c ON v.id_client = c.id_client";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-
             while (rs.next()) {
-                Vente vente = new Vente();
-                vente.setIdVente(rs.getInt("id_vente"));
-                vente.setClient(new ClientDAO().getClientById(rs.getInt("id_client")));
-                Date dateVente = rs.getDate("date_vente");
-                if (dateVente != null) {
-                    vente.setDateVente(dateVente.toLocalDate());
-                }
-                vente.setTypeVente(rs.getString("type_vente"));
-                vente.setStatut(rs.getString("statut"));
-                vente.setMontantTotal(rs.getDouble("montant_total"));
-                vente.setRemise(rs.getDouble("remise"));
-
-                List<VenteMedicament> venteMedicamentList = getVenteMedicaments(vente.getIdVente());
-                ObservableList<VenteMedicament> observableVenteMedicamentList = FXCollections.observableArrayList(venteMedicamentList);
-                vente.setMedicaments(observableVenteMedicamentList);
-
+                int idVente = rs.getInt("id_vente");
+                Client client = new Client(rs.getInt("id_client"), rs.getString("nom_client"), rs.getString("prenom_client"), null, null, null, null, null);
+                String typeVente = rs.getString("type_vente");
+                double montantTotal = rs.getDouble("montant_total");
+                LocalDate dateVente = rs.getDate("date_vente").toLocalDate();
+                String statut = rs.getString("statut");
+                ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente);
                 ventes.add(vente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return ventes;
-    }
-
-    public List<Vente> getAllVentesEnAttente() {
-        List<Vente> ventes = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM vente WHERE statut = 'En attente'";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            while (rs.next()) {
-                Vente vente = new Vente();
-                vente.setIdVente(rs.getInt("id_vente"));
-                vente.setClient(new ClientDAO().getClientById(rs.getInt("id_client")));
-                Date dateVente = rs.getDate("date_vente");
-                if (dateVente != null) {
-                    vente.setDateVente(dateVente.toLocalDate());
-                }
-                vente.setTypeVente(rs.getString("type_vente"));
-                vente.setStatut(rs.getString("statut"));
-                vente.setMontantTotal(rs.getDouble("montant_total"));
-                vente.setRemise(rs.getDouble("remise"));
-
-                List<VenteMedicament> venteMedicamentList = getVenteMedicaments(vente.getIdVente());
-                ObservableList<VenteMedicament> observableVenteMedicamentList = FXCollections.observableArrayList(venteMedicamentList);
-                vente.setMedicaments(observableVenteMedicamentList);
-
-                ventes.add(vente);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ventes;
-    }
-
-    private List<VenteMedicament> getVenteMedicaments(int idVente) {
-        List<VenteMedicament> venteMedicaments = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM vente_medicament WHERE id_vente = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, idVente);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                VenteMedicament venteMedicament = new VenteMedicament();
-                venteMedicament.setIdVenteMedicament(rs.getInt("id_vente_medicament"));
-                Medicament medicament = new MedicamentDAO().getMedicamentById(rs.getInt("id_medicament"));
-                venteMedicament.setMedicament(medicament);
-                venteMedicament.setQuantite(rs.getInt("quantite"));
-                venteMedicament.setPrixUnitaire(rs.getDouble("prix_unitaire"));
-                venteMedicament.setIdClient(rs.getInt("id_client"));
-                venteMedicament.setTypeVente(rs.getString("type_vente"));
-                venteMedicaments.add(venteMedicament);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return venteMedicaments;
     }
 
     public void updateVente(Vente vente) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "UPDATE vente SET statut = ?, date_paiement = ? WHERE id_vente = ?";
+            String query = "UPDATE vente SET statut = ? WHERE id_vente = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, vente.getStatut());
-            stmt.setTimestamp(2, Timestamp.valueOf(vente.getDatePaiement()));
-            stmt.setInt(3, vente.getIdVente());
+            stmt.setInt(2, vente.getIdVente());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Vente getVenteByIdVente(int idVente) {
-        Vente vente = null;
+    private List<LigneVente> getLignesVenteByIdVente(int idVente) {
+        List<LigneVente> lignesVente = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM vente WHERE id_vente = ?";
+            String query = "SELECT lv.*, m.nom_medicament, m.prix_vente FROM ligne_vente lv JOIN medicament m ON lv.id_medicament = m.id_medicament WHERE lv.id_vente = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, idVente);
             ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                vente = new Vente();
-                vente.setIdVente(rs.getInt("id_vente"));
-                vente.setClient(new ClientDAO().getClientById(rs.getInt("id_client")));
-                Date dateVente = rs.getDate("date_vente");
-                if (dateVente != null) {
-                    vente.setDateVente(dateVente.toLocalDate());
-                }
-                vente.setTypeVente(rs.getString("type_vente"));
-                vente.setStatut(rs.getString("statut"));
-                vente.setMontantTotal(rs.getDouble("montant_total"));
-                vente.setRemise(rs.getDouble("remise"));
-                Timestamp datePaiement = rs.getTimestamp("date_paiement");
-                if (datePaiement != null) {
-                    vente.setDatePaiement(datePaiement.toLocalDateTime());
-                }
-
-                List<VenteMedicament> venteMedicamentList = getVenteMedicaments(vente.getIdVente());
-                ObservableList<VenteMedicament> observableVenteMedicamentList = FXCollections.observableArrayList(venteMedicamentList);
-                vente.setMedicaments(observableVenteMedicamentList);
+            while (rs.next()) {
+                int idLigneVente = rs.getInt("id_ligne_vente");
+                int idMedicament = rs.getInt("id_medicament");
+                String nomMedicament = rs.getString("nom_medicament");
+                double prixVente = rs.getDouble("prix_vente");
+                Medicament medicament = new Medicament(idMedicament, nomMedicament, null, null, null, null, 0, prixVente, 0, null);
+                int quantite = rs.getInt("quantite");
+                double prixUnitaire = rs.getDouble("prix_unitaire");
+                double prixTotal = rs.getDouble("prix_total");
+                LigneVente ligneVente = new LigneVente(idLigneVente, medicament, quantite, prixUnitaire, prixTotal);
+                lignesVente.add(ligneVente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return vente;
+        return lignesVente;
     }
 
-    public List<Vente> getVentesPayees() {
-        List<Vente> ventesPayees = new ArrayList<>();
+    public void deleteVente(Vente vente) {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT * FROM vente WHERE statut = 'Payée'";
+            String query = "DELETE FROM vente WHERE id_vente = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, vente.getIdVente());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Vente> getAllVentesEnAttente() {
+        List<Vente> ventes = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT v.*, c.nom_client, c.prenom_client FROM vente v LEFT JOIN client c ON v.id_client = c.id_client WHERE v.statut = 'En attente'";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-
             while (rs.next()) {
-                Vente vente = new Vente();
-                vente.setIdVente(rs.getInt("id_vente"));
-                vente.setClient(new ClientDAO().getClientById(rs.getInt("id_client")));
-                Date dateVente = rs.getDate("date_vente");
-                if (dateVente != null) {
-                    vente.setDateVente(dateVente.toLocalDate());
-                }
-                vente.setTypeVente(rs.getString("type_vente"));
-                vente.setStatut(rs.getString("statut"));
-                vente.setMontantTotal(rs.getDouble("montant_total"));
-                vente.setRemise(rs.getDouble("remise"));
-                Timestamp datePaiement = rs.getTimestamp("date_paiement");
-                if (datePaiement != null) {
-                    vente.setDatePaiement(datePaiement.toLocalDateTime());
-                }
-
-                ventesPayees.add(vente);
+                int idVente = rs.getInt("id_vente");
+                Client client = new Client(rs.getInt("id_client"), rs.getString("nom_client"), rs.getString("prenom_client"), null, null, null, null, null);
+                String typeVente = rs.getString("type_vente");
+                double montantTotal = rs.getDouble("montant_total");
+                LocalDate dateVente = rs.getDate("date_vente").toLocalDate();
+                String statut = rs.getString("statut");
+                ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente);
+                ventes.add(vente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return ventesPayees;
+        return ventes;
+    }
+
+    public void enregistrerVentePayee(Vente vente) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "INSERT INTO ventes_payees (id_vente, id_client, type_vente, montant_total, date_vente, date_paiement) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, vente.getIdVente());
+            stmt.setInt(2, vente.getClient() != null ? vente.getClient().getIdClient() : 0);
+            stmt.setString(3, vente.getTypeVente());
+            stmt.setDouble(4, vente.getMontantTotal());
+            stmt.setDate(5, Date.valueOf(vente.getDateVente()));
+            stmt.setDate(6, Date.valueOf(LocalDate.now()));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -2,23 +2,31 @@ package org.example.pharmagest.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.example.pharmagest.dao.ClientDAO;
 import org.example.pharmagest.dao.MedicamentDAO;
 import org.example.pharmagest.dao.VenteDAO;
 import org.example.pharmagest.model.Client;
+import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Medicament;
 import org.example.pharmagest.model.Vente;
-import org.example.pharmagest.model.VenteMedicament;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class VenteController {
 
+    @FXML
+    private VBox clientSelectionVBox;
     @FXML
     private TableView<Client> clientTableView;
     @FXML
@@ -44,21 +52,19 @@ public class VenteController {
     @FXML
     private TextField searchMedicamentField;
     @FXML
-    private TableView<VenteMedicament> medicamentVenteTableView;
+    private TableView<LigneVente> medicamentVenteTableView;
     @FXML
-    private TableColumn<VenteMedicament, String> nomMedicamentVenteColumn;
+    private TableColumn<LigneVente, String> nomMedicamentVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, Integer> quantiteMedicamentVenteColumn;
+    private TableColumn<LigneVente, Integer> quantiteMedicamentVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, Double> prixUnitaireVenteColumn;
+    private TableColumn<LigneVente, Double> prixUnitaireVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, Double> prixTotalVenteColumn;
+    private TableColumn<LigneVente, Double> prixTotalVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, Void> actionVenteColumn;
+    private TableColumn<LigneVente, Void> actionVenteColumn;
     @FXML
     private Label prixTotalLabel;
-    @FXML
-    private TextField remiseTextField;
     @FXML
     private Label prixFinalLabel;
     @FXML
@@ -66,18 +72,10 @@ public class VenteController {
     @FXML
     private Label detailsTypeVenteLabel;
 
-    private ObservableList<Client> clientList;
-    private FilteredList<Client> filteredClientList;
-    private ObservableList<Medicament> medicamentList;
-    private ObservableList<VenteMedicament> venteMedicamentList;
-    private FilteredList<Medicament> filteredMedicamentList;
     private ClientDAO clientDAO;
     private MedicamentDAO medicamentDAO;
     private VenteDAO venteDAO;
-
-    private Vente venteEnCours;
-    private Client clientSelectionne;
-    private String typeVenteSelectionne;
+    private ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -85,33 +83,18 @@ public class VenteController {
         medicamentDAO = new MedicamentDAO();
         venteDAO = new VenteDAO();
 
-        clientList = FXCollections.observableArrayList(clientDAO.getAllClients());
-        filteredClientList = new FilteredList<>(clientList, p -> true);
-        medicamentList = FXCollections.observableArrayList(medicamentDAO.getAllMedicaments());
-        venteMedicamentList = FXCollections.observableArrayList();
-        filteredMedicamentList = new FilteredList<>(medicamentList, p -> true);
-
         nomClientColumn.setCellValueFactory(new PropertyValueFactory<>("nomClient"));
         prenomClientColumn.setCellValueFactory(new PropertyValueFactory<>("prenomClient"));
-
-        clientTableView.setItems(filteredClientList);
-
-        clientSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredClientList.setPredicate(client -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                String lowerCaseFilter = newValue.toLowerCase();
-                return client.getNomClient().toLowerCase().contains(lowerCaseFilter) ||
-                        client.getPrenomClient().toLowerCase().contains(lowerCaseFilter);
-            });
-        });
-
         nomMedicamentColumn.setCellValueFactory(new PropertyValueFactory<>("nomMedicament"));
         prixUnitaireColumn.setCellValueFactory(new PropertyValueFactory<>("prixVente"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("quantiteMedicament"));
+        nomMedicamentVenteColumn.setCellValueFactory(cellData -> cellData.getValue().getMedicament().nomMedicamentProperty());
+        quantiteMedicamentVenteColumn.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+        prixUnitaireVenteColumn.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
+        prixTotalVenteColumn.setCellValueFactory(new PropertyValueFactory<>("prixTotal"));
 
+        sansOrdonnanceRadio.setSelected(true);
+        detailsTypeVenteLabel.setText("Sans Ordonnance");
         actionColumn.setCellFactory(param -> new TableCell<>() {
             private final Button ajouterButton = new Button("Ajouter");
 
@@ -133,32 +116,13 @@ public class VenteController {
             }
         });
 
-        medicamentTableView.setItems(filteredMedicamentList);
-
-        searchMedicamentField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredMedicamentList.setPredicate(medicament -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                String lowerCaseFilter = newValue.toLowerCase();
-                return medicament.getNomMedicament().toLowerCase().contains(lowerCaseFilter);
-            });
-        });
-
-        nomMedicamentVenteColumn.setCellValueFactory(cellData -> cellData.getValue().getMedicament().nomMedicamentProperty());
-        quantiteMedicamentVenteColumn.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        prixUnitaireVenteColumn.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
-        prixTotalVenteColumn.setCellValueFactory(cellData -> cellData.getValue().prixTotalProperty().asObject());
-
         actionVenteColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button supprimerButton = new Button("Supprimer");
+            private final Button effacerButton = new Button("Effacer");
 
             {
-                supprimerButton.setOnAction(event -> {
-                    VenteMedicament venteMedicament = getTableView().getItems().get(getIndex());
-                    venteMedicamentList.remove(venteMedicament);
-                    mettreAJourPrixTotal();
+                effacerButton.setOnAction(event -> {
+                    LigneVente ligneVente = getTableView().getItems().get(getIndex());
+                    supprimerMedicamentVente(ligneVente);
                 });
             }
 
@@ -168,173 +132,181 @@ public class VenteController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(supprimerButton);
+                    setGraphic(effacerButton);
                 }
             }
         });
 
-        medicamentVenteTableView.setItems(venteMedicamentList);
-
-        remiseTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            mettreAJourPrixTotal();
+        avecOrdonnanceRadio.setOnAction(event -> {
+            clientSelectionVBox.setVisible(true);
+            refreshClientTableView();
         });
-        // Initialiser venteEnCours
-        venteEnCours = new Vente();
 
-        // Ajouter des observateurs pour mettre à jour venteEnCours
+        sansOrdonnanceRadio.setOnAction(event -> {
+            clientSelectionVBox.setVisible(false);
+            clientTableView.getSelectionModel().clearSelection();
+            detailsClientLabel.setText("");
+        });
+
         clientTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            clientSelectionne = newValue;
-            venteEnCours.setClient(clientSelectionne);
-            updateDetailsClientLabel();
+            if (newValue != null) {
+                detailsClientLabel.setText(newValue.getNomClient() + " " + newValue.getPrenomClient());
+            }
         });
 
-        avecOrdonnanceRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            typeVenteSelectionne = newValue ? "Avec Ordonnance" : "Sans Ordonnance";
-            venteEnCours.setTypeVente(typeVenteSelectionne);
-            updateDetailsTypeVenteLabel();
-        });
-    }
+        sansOrdonnanceRadio.setSelected(true);
+        clientSelectionVBox.setVisible(false);
 
-    private void updateDetailsClientLabel() {
-        if (clientSelectionne != null) {
-            detailsClientLabel.setText(clientSelectionne.getNomClient() + " " + clientSelectionne.getPrenomClient());
-        } else {
-            detailsClientLabel.setText("Aucun client sélectionné");
-        }
-    }
-
-    private void updateDetailsTypeVenteLabel() {
-        if (typeVenteSelectionne != null) {
-            detailsTypeVenteLabel.setText(typeVenteSelectionne);
-        } else {
-            detailsTypeVenteLabel.setText("Aucun type sélectionné");
-        }
+        refreshMedicamentTableView();
     }
 
     @FXML
     private void handleNouvelleVente() {
-        venteEnCours = new Vente();
-        venteEnCours.setClient(clientSelectionne);
-        venteEnCours.setTypeVente(typeVenteSelectionne);
-        venteEnCours.setDateVente(LocalDate.now());
-        venteEnCours.setStatut("En attente");
+        lignesVente.clear();
+        refreshMedicamentVenteTableView();
+        updatePrixTotal();
+        clientTableView.getSelectionModel().clearSelection();
+        sansOrdonnanceRadio.setSelected(true);
+        clientSelectionVBox.setVisible(false);
+        detailsClientLabel.setText("");
+        detailsTypeVenteLabel.setText("Sans Ordonnance");
+        searchMedicamentField.clear();
+        medicamentTableView.getSelectionModel().clearSelection();
+    }
 
-        venteMedicamentList.clear();
-        medicamentVenteTableView.refresh();
-        mettreAJourPrixTotal();
-        updateDetailsClientLabel();
-        updateDetailsTypeVenteLabel();
+    @FXML
+    private void handleClientSearch() {
+        String searchTerm = clientSearchField.getText();
+        ObservableList<Client> searchResults = FXCollections.observableArrayList(clientDAO.searchClients(searchTerm));
+        clientTableView.setItems(searchResults);
+    }
+
+    @FXML
+    private void handleMedicamentSearch() {
+        String searchTerm = searchMedicamentField.getText();
+        ObservableList<Medicament> searchResults = FXCollections.observableArrayList(medicamentDAO.searchMedicaments(searchTerm));
+        medicamentTableView.setItems(searchResults);
     }
 
     private void ajouterMedicamentVente(Medicament medicament) {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Ajouter un médicament");
-        dialog.setHeaderText("Entrez la quantité pour le médicament :");
-        dialog.setContentText(medicament.getNomMedicament());
+        dialog.setTitle("Quantité");
+        dialog.setHeaderText("Saisir la quantité");
+        dialog.setContentText("Quantité :");
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(quantiteString -> {
             try {
                 int quantite = Integer.parseInt(quantiteString);
-                if (medicament.getQuantiteMedicament() >= quantite) {
-                    VenteMedicament venteMedicament = new VenteMedicament();
-                    venteMedicament.setMedicament(medicament);
-                    venteMedicament.setQuantite(quantite);
-                    venteMedicament.setPrixUnitaire(medicament.getPrixVente());
-                    venteMedicament.setPrixTotal(quantite * medicament.getPrixVente());
+                double prixUnitaire = medicament.getPrixVente();
+                double prixTotal = quantite * prixUnitaire;
 
-                    venteMedicamentList.add(venteMedicament);
-                    medicamentVenteTableView.refresh();
-                    mettreAJourPrixTotal();
-                } else {
-                    // Code existant pour gérer le stock insuffisant
-                }
+                LigneVente ligneVente = new LigneVente(0, medicament, quantite, prixUnitaire, prixTotal);
+                lignesVente.add(ligneVente);
+                refreshMedicamentVenteTableView();
+                updatePrixTotal();
             } catch (NumberFormatException e) {
-                // Code existant pour gérer une quantité invalide
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Quantité invalide");
+                alert.setContentText("Veuillez saisir une quantité valide.");
+                alert.showAndWait();
             }
         });
     }
 
+    private void supprimerMedicamentVente(LigneVente ligneVente) {
+        lignesVente.remove(ligneVente);
+        refreshMedicamentVenteTableView();
+        updatePrixTotal();
+    }
+
     @FXML
     private void handleValiderVente() {
-        if (venteEnCours == null || venteMedicamentList.isEmpty() || clientSelectionne == null || typeVenteSelectionne == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Vente invalide");
-            alert.setHeaderText(null);
-            alert.setContentText("Une vente doit contenir au moins un médicament et les informations du client et le type de vente doivent être sélectionnés.");
-            alert.showAndWait();
-            return;
-        }
-
-        venteEnCours.setMedicaments(venteMedicamentList);
-        String prixFinalText = prixFinalLabel.getText().trim();
-        if (!prixFinalText.isEmpty()) {
-            try {
-                double montantTotal = Double.parseDouble(prixFinalText.replace(",", "."));
-                venteEnCours.setMontantTotal(montantTotal);
-            } catch (NumberFormatException e) {
+        Client selectedClient = null;
+        if (avecOrdonnanceRadio.isSelected()) {
+            selectedClient = clientTableView.getSelectionModel().getSelectedItem();
+            if (selectedClient == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Montant total invalide");
-                alert.setHeaderText(null);
-                alert.setContentText("Le montant total de la vente est invalide.");
+                alert.setTitle("Avertissement");
+                alert.setHeaderText("Aucun client sélectionné");
+                alert.setContentText("Veuillez sélectionner un client pour une vente avec ordonnance.");
                 alert.showAndWait();
                 return;
             }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Montant total manquant");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez entrer le montant total de la vente.");
-            alert.showAndWait();
-            return;
         }
 
-        double remise = 0;
-        if (!remiseTextField.getText().isEmpty()) {
-            remise = Double.parseDouble(remiseTextField.getText().replace(",", "."));
+        if (!lignesVente.isEmpty()) {
+            String typeVente = avecOrdonnanceRadio.isSelected() ? "Avec Ordonnance" : "Sans Ordonnance";
+            String prixTotalString = prixTotalLabel.getText().replace(",", ".");
+            double montantTotal = Double.parseDouble(prixTotalString);
+
+            Vente vente;
+            if (typeVente.equals("Sans Ordonnance")) {
+                vente = new Vente(0, null, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente);
+            } else {
+                vente = new Vente(0, selectedClient, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente);
+            }
+            int idVente = venteDAO.addVente(vente);
+
+            for (LigneVente ligneVente : lignesVente) {
+                ligneVente.setIdVente(idVente);
+                venteDAO.addLigneVente(ligneVente);
+                Medicament medicament = ligneVente.getMedicament();
+                medicament.setQuantiteMedicament(medicament.getQuantiteMedicament() - ligneVente.getQuantite());
+                medicamentDAO.updateMedicament(medicament);
+            }
+
+            lignesVente.clear();
+            refreshMedicamentVenteTableView();
+            updatePrixTotal();
+            clientTableView.getSelectionModel().clearSelection();
+            sansOrdonnanceRadio.setSelected(true);
+            clientSelectionVBox.setVisible(false);
+            detailsClientLabel.setText("");
+            detailsTypeVenteLabel.setText("Sans Ordonnance");
         }
-        venteEnCours.setRemise(remise);
-
-        // Définir le statut de la vente à "En attente"
-        venteEnCours.setStatut("En attente");
-
-        venteDAO.addVente(venteEnCours);
-
-        for (VenteMedicament venteMedicament : venteMedicamentList) {
-            Medicament medicament = venteMedicament.getMedicament();
-            venteMedicament.setIdClient(clientSelectionne.getIdClient());
-            venteMedicament.setTypeVente(typeVenteSelectionne);
-            int quantiteVendue = venteMedicament.getQuantite();
-            medicament.setQuantiteMedicament(medicament.getQuantiteMedicament() - quantiteVendue);
-            medicamentDAO.updateMedicament(medicament);
-        }
-
-        venteDAO.addVenteMedicaments(venteEnCours.getIdVente(), venteMedicamentList);
-
-        venteEnCours.setMedicaments(venteMedicamentList);
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Vente validée");
-        alert.setHeaderText(null);
-        alert.setContentText("La vente a été validée avec succès.");
-        alert.showAndWait();
-
-        // Réinitialiser les champs après validation de la vente
-        handleNouvelleVente();
     }
 
+    @FXML
+    private void handleAjouterClient() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/ajouterclient.fxml"));
+            Parent root = loader.load();
+            AjouterClientController ajouterClientController = loader.getController();
 
-    private void mettreAJourPrixTotal() {
-        double prixTotal = venteMedicamentList.stream()
-                .mapToDouble(vm -> vm.getPrixUnitaire() * vm.getQuantite())
-                .sum();
-        prixTotalLabel.setText(String.format("%.2f", prixTotal));
+            ClientController clientController = new ClientController();
+            ajouterClientController.setClientController(clientController);
 
-        double remise = 0;
-        if (!remiseTextField.getText().isEmpty()) {
-            remise = Double.parseDouble(remiseTextField.getText().replace(",", "."));
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter un client");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            refreshClientTableView();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        double prixFinal = prixTotal - remise;
-        prixFinalLabel.setText(String.format("%.2f", prixFinal));
+    }
+
+    private void refreshClientTableView() {
+        ObservableList<Client> clients = FXCollections.observableArrayList(clientDAO.getAllClients());
+        clientTableView.setItems(clients);
+    }
+
+    private void refreshMedicamentTableView() {
+        ObservableList<Medicament> medicaments = FXCollections.observableArrayList(medicamentDAO.getAllMedicaments());
+        medicamentTableView.setItems(medicaments);
+    }
+
+    private void refreshMedicamentVenteTableView() {
+        medicamentVenteTableView.setItems(lignesVente);
+    }
+
+    private void updatePrixTotal() {
+        double prixTotal = lignesVente.stream().mapToDouble(LigneVente::getPrixTotal).sum();
+        prixTotalLabel.setText(String.format("%.2f", prixTotal));
+        prixFinalLabel.setText(String.format("%.2f", prixTotal));
     }
 }

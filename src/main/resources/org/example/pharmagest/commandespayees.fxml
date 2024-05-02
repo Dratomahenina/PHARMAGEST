@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.CommandesPayeesController">
-    <TableView fx:id="commandesPayeesTableView" prefHeight="400.0" prefWidth="800.0">
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.CommandesPayeesController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label text="Commandes Payées">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Label>
+
+    <TableView fx:id="commandesPayeesTableView" prefHeight="500.0" prefWidth="1200.0">
         <columns>
             <TableColumn fx:id="idVenteColumn" prefWidth="100.0" text="ID Vente" />
             <TableColumn fx:id="nomClientColumn" prefWidth="150.0" text="Nom Client" />
             <TableColumn fx:id="prenomClientColumn" prefWidth="150.0" text="Prénom Client" />
-            <TableColumn fx:id="nomMedicamentColumn" prefWidth="150.0" text="Médicament" />
-            <TableColumn fx:id="quantiteColumn" prefWidth="75.0" text="Quantité" />
-            <TableColumn fx:id="prixUnitaireColumn" prefWidth="100.0" text="Prix Unitaire" />
-            <TableColumn fx:id="totalColumn" prefWidth="100.0" text="Total" />
-            <TableColumn fx:id="typeVenteColumn" prefWidth="100.0" text="Type de Vente" />
+            <TableColumn fx:id="typeVenteColumn" prefWidth="150.0" text="Type de Vente" />
+            <TableColumn fx:id="montantTotalColumn" prefWidth="120.0" text="Montant Total" />
+            <TableColumn fx:id="medicamentsColumn" prefWidth="300.0" text="Médicaments" />
             <TableColumn fx:id="datePaiementColumn" prefWidth="150.0" text="Date Paiement" />
-            <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action" />
+            <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action">
+                <cellFactory>
+                    <TableCell>
+                        <graphic>
+                            <Button text="Facture" onAction="#handleAfficherFacture" />
+                        </graphic>
+                    </TableCell>
+                </cellFactory>
+            </TableColumn>
         </columns>
     </TableView>
 </VBox>

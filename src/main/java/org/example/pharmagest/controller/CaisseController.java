@@ -2,198 +2,133 @@ package org.example.pharmagest.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.example.pharmagest.dao.CaisseDAO;
-import org.example.pharmagest.model.Client;
-import org.example.pharmagest.model.VenteMedicament;
+import org.example.pharmagest.dao.VenteDAO;
+import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Vente;
-import org.example.pharmagest.utils.FacturePDF;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import javafx.beans.property.SimpleStringProperty;
 
 public class CaisseController {
 
     @FXML
-    private TableView<VenteMedicament> venteMedicamentTableView;
+    private TableView<Vente> venteTableView;
     @FXML
-    private TableColumn<VenteMedicament, Integer> idVenteMedicamentColumn;
+    private TableColumn<Vente, Integer> idVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, String> nomClientColumn;
+    private TableColumn<Vente, String> nomClientColumn;
     @FXML
-    private TableColumn<VenteMedicament, String> prenomClientColumn;
+    private TableColumn<Vente, String> prenomClientColumn;
     @FXML
-    private TableColumn<VenteMedicament, String> nomMedicamentColumn;
+    private TableColumn<Vente, String> typeVenteColumn;
     @FXML
-    private TableColumn<VenteMedicament, Integer> quantiteColumn;
+    private TableColumn<Vente, Double> montantTotalColumn;
     @FXML
-    private TableColumn<VenteMedicament, Double> prixUnitaireColumn;
+    private TableColumn<Vente, String> statutColumn;
     @FXML
-    private TableColumn<VenteMedicament, Double> totalColumn;
+    private TableColumn<Vente, Void> actionColumn;
     @FXML
-    private TableColumn<VenteMedicament, String> typeVenteColumn;
+    private TableView<LigneVente> detailsCommandeTableView;
     @FXML
-    private TableColumn<VenteMedicament, String> statutColumn;
+    private TableColumn<LigneVente, String> medicamentColumn;
     @FXML
-    private Label detailsCommandeLabel;
+    private TableColumn<LigneVente, Integer> quantiteColumn;
+    @FXML
+    private TableColumn<LigneVente, Double> prixUnitaireColumn;
     @FXML
     private Label montantTotalLabel;
-    @FXML
-    private Label remiseLabel;
-    @FXML
-    private Label montantFinalLabel;
     @FXML
     private TextField montantDonneTextField;
     @FXML
     private Label montantRenduLabel;
 
-    private ObservableList<VenteMedicament> venteMedicamentList;
-    private CaisseDAO caisseDAO;
-    private VenteMedicament venteMedicamentSelectionne;
+    private VenteDAO venteDAO;
 
     @FXML
     public void initialize() {
-        caisseDAO = new CaisseDAO();
-        venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicamentsEnAttente());
+        venteDAO = new VenteDAO();
 
-        idVenteMedicamentColumn.setCellValueFactory(new PropertyValueFactory<>("idVenteMedicament"));
-        nomClientColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getClient() != null) {
-                return cellData.getValue().getClient().nomClientProperty();
-            } else {
-                return new SimpleStringProperty("");
-            }
-        });
-        prenomClientColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getClient() != null) {
-                return cellData.getValue().getClient().prenomClientProperty();
-            } else {
-                return new SimpleStringProperty("");
-            }
-        });
-        nomMedicamentColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getMedicament() != null) {
-                return cellData.getValue().getMedicament().nomMedicamentProperty();
-            } else {
-                return new SimpleStringProperty("");
-            }
-        });
+        idVenteColumn.setCellValueFactory(new PropertyValueFactory<>("idVente"));
+        nomClientColumn.setCellValueFactory(cellData -> cellData.getValue().getClient() != null ? cellData.getValue().getClient().nomClientProperty() : null);
+        prenomClientColumn.setCellValueFactory(cellData -> cellData.getValue().getClient() != null ? cellData.getValue().getClient().prenomClientProperty() : null);
+        typeVenteColumn.setCellValueFactory(new PropertyValueFactory<>("typeVente"));
+        montantTotalColumn.setCellValueFactory(new PropertyValueFactory<>("montantTotal"));
+        statutColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        medicamentColumn.setCellValueFactory(cellData -> cellData.getValue().getMedicament().nomMedicamentProperty());
         quantiteColumn.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         prixUnitaireColumn.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
-        totalColumn.setCellValueFactory(cellData -> cellData.getValue().prixTotalProperty().asObject());
-        typeVenteColumn.setCellValueFactory(new PropertyValueFactory<>("typeVente"));
-        statutColumn.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getVente() != null) {
-                return cellData.getValue().getVente().statutProperty();
-            } else {
-                return new SimpleStringProperty("");
+
+        actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button supprimerButton = new Button("Supprimer");
+
+            {
+                supprimerButton.setOnAction(event -> {
+                    Vente vente = getTableView().getItems().get(getIndex());
+                    handleSupprimerVente(vente);
+                });
             }
-        });
 
-        venteMedicamentTableView.setItems(venteMedicamentList);
-
-        venteMedicamentTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                venteMedicamentSelectionne = venteMedicamentTableView.getSelectionModel().getSelectedItem();
-                Vente vente = venteMedicamentSelectionne.getVente();
-                Client client = vente.getClient();
-                if (client != null) {
-                    detailsCommandeLabel.setText("Détails de la commande : " + vente.getIdVente() +
-                            " - Client : " + client.getNomClient() + " " + client.getPrenomClient());
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
                 } else {
-                    detailsCommandeLabel.setText("Détails de la commande : " + vente.getIdVente() +
-                            " - Client : Client non disponible");
+                    setGraphic(supprimerButton);
                 }
-                montantTotalLabel.setText(String.format("%.2f", vente.getMontantTotal()));
-                remiseLabel.setText(String.format("%.2f", vente.getRemise()));
-                montantFinalLabel.setText(String.format("%.2f", vente.getMontantTotal() - vente.getRemise()));
             }
         });
+
+        refreshVenteTableView();
+
+        venteTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                refreshVenteDetails(newValue);
+            }
+        });
+    }
+
+    private void refreshVenteTableView() {
+        ObservableList<Vente> ventes = FXCollections.observableArrayList(venteDAO.getAllVentesEnAttente());
+        venteTableView.setItems(ventes);
+    }
+
+    private void refreshVenteDetails(Vente vente) {
+        montantTotalLabel.setText(String.format("%.2f", vente.getMontantTotal()));
+        detailsCommandeTableView.setItems(FXCollections.observableArrayList(vente.getLignesVente()));
     }
 
     @FXML
     private void handleValiderPaiement() {
-        if (venteMedicamentSelectionne != null) {
-            Vente vente = venteMedicamentSelectionne.getVente();
-            double montantDonne = Double.parseDouble(montantDonneTextField.getText().replace(",", "."));
-            double montantFinal = vente.getMontantTotal() - vente.getRemise();
+        Vente selectedVente = venteTableView.getSelectionModel().getSelectedItem();
+        if (selectedVente != null && selectedVente.getStatut().equals("En attente")) {
+            double montantDonne = Double.parseDouble(montantDonneTextField.getText());
+            double montantRendu = montantDonne - selectedVente.getMontantTotal();
+            montantRenduLabel.setText(String.format("%.2f", montantRendu));
 
-            if (montantDonne >= montantFinal) {
-                double montantRendu = montantDonne - montantFinal;
-                montantRenduLabel.setText(String.format("%.2f", montantRendu));
+            selectedVente.setStatut("Payée");
+            venteDAO.updateVente(selectedVente);
+            venteDAO.enregistrerVentePayee(selectedVente);
 
-                caisseDAO.updateVenteStatut(vente.getIdVente(), "Payée");
-                caisseDAO.updateVenteDatePaiement(vente.getIdVente(), LocalDateTime.now());
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Paiement validé");
-                alert.setHeaderText(null);
-                alert.setContentText("Le paiement a été validé avec succès.");
-                alert.showAndWait();
-
-                venteMedicamentList = FXCollections.observableArrayList(caisseDAO.getAllVenteMedicamentsEnAttente());
-                venteMedicamentTableView.setItems(venteMedicamentList);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Montant insuffisant");
-                alert.setHeaderText(null);
-                alert.setContentText("Le montant donné est insuffisant pour régler la commande.");
-                alert.showAndWait();
-            }
-        }
-    }
-
-    @FXML
-    private void handleImprimerFacture() {
-        if (venteMedicamentSelectionne != null) {
-            Vente vente = venteMedicamentSelectionne.getVente();
-            if (vente.getStatut().equals("Payée")) {
-                try {
-                    FacturePDF.genererFacturePDF(vente);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Impression de facture");
-                    alert.setHeaderText(null);
-                    alert.setContentText("La facture a été générée avec succès.");
-                    alert.showAndWait();
-                } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erreur d'impression");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Une erreur s'est produite lors de l'impression de la facture.");
-                    alert.showAndWait();
-                }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Commande non payée");
-                alert.setHeaderText(null);
-                alert.setContentText("Veuillez sélectionner une commande payée pour imprimer la facture.");
-                alert.showAndWait();
-            }
+            refreshVenteTableView();
+            montantDonneTextField.clear();
         }
     }
 
     @FXML
     private void handleCommandesPayees() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/commandespayees.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Commandes Payées");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ObservableList<Vente> ventesEnAttente = FXCollections.observableArrayList(venteDAO.getAllVentes().stream()
+                .filter(vente -> vente.getStatut().equals("En attente"))
+                .toList());
+        venteTableView.setItems(ventesEnAttente);
     }
 
-
+    @FXML
+    private void handleSupprimerVente(Vente vente) {
+        if (vente != null && vente.getStatut().equals("En attente")) {
+            venteDAO.deleteVente(vente);
+            refreshVenteTableView();
+        }
+    }
 }

@@ -4,6 +4,8 @@ module org.example.pharmagest {
     requires javafx.graphics;
     requires java.sql;
     requires itextpdf;
+    requires javafx.web;
+    requires java.desktop;
 
     opens org.example.pharmagest to javafx.fxml;
     exports org.example.pharmagest;

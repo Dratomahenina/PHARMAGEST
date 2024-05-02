@@ -26,6 +26,8 @@ public class AjouterClientController {
 
     private ClientDAO clientDAO;
     private ClientController clientController;
+    private VenteController venteController;
+
 
     @FXML
     public void initialize() {
@@ -46,15 +48,15 @@ public class AjouterClientController {
         Client client = new Client(0, nomClient, prenomClient, dateNaissanceClient, adresseClient, telephoneClient, statut, LocalDate.now());
         clientDAO.addClient(client);
 
-        if (clientController != null) {
-            clientController.refreshClientList();
-        }
-
         // Fermer la fenêtre d'ajout de client
         nomClientField.getScene().getWindow().hide();
     }
 
     public void setClientController(ClientController clientController) {
         this.clientController = clientController;
+    }
+
+    public void setClientController(VenteController venteController) {
+        this.venteController = venteController;
     }
 }
