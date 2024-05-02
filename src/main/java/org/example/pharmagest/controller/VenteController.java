@@ -243,11 +243,12 @@ public class VenteController {
 
             Vente vente;
             if (typeVente.equals("Sans Ordonnance")) {
-                vente = new Vente(0, null, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente);
+                vente = new Vente(0, null, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente, null);
             } else {
-                vente = new Vente(0, selectedClient, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente);
+                vente = new Vente(0, selectedClient, typeVente, montantTotal, LocalDate.now(), "En attente", lignesVente, null);
             }
             int idVente = venteDAO.addVente(vente);
+
 
             for (LigneVente ligneVente : lignesVente) {
                 ligneVente.setIdVente(idVente);

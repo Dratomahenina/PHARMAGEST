@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.CommandesPayeesController">
     <padding>
@@ -25,15 +26,7 @@
             <TableColumn fx:id="montantTotalColumn" prefWidth="120.0" text="Montant Total" />
             <TableColumn fx:id="medicamentsColumn" prefWidth="300.0" text="Médicaments" />
             <TableColumn fx:id="datePaiementColumn" prefWidth="150.0" text="Date Paiement" />
-            <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action">
-                <cellFactory>
-                    <TableCell>
-                        <graphic>
-                            <Button text="Facture" onAction="#handleAfficherFacture" />
-                        </graphic>
-                    </TableCell>
-                </cellFactory>
-            </TableColumn>
+            <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action"/>
         </columns>
     </TableView>
 </VBox>

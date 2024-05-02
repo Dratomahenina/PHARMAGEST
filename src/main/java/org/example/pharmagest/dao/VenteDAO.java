@@ -70,8 +70,7 @@ public class VenteDAO {
                 LocalDate dateVente = rs.getDate("date_vente").toLocalDate();
                 String statut = rs.getString("statut");
                 ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
-                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente);
-                ventes.add(vente);
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente, null);                ventes.add(vente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,8 +140,7 @@ public class VenteDAO {
                 LocalDate dateVente = rs.getDate("date_vente").toLocalDate();
                 String statut = rs.getString("statut");
                 ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
-                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente);
-                ventes.add(vente);
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente, null);                ventes.add(vente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,5 +162,42 @@ public class VenteDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteVentePayee(Vente vente) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "DELETE FROM ventes_payees WHERE id_vente = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, vente.getIdVente());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Vente> getVentesPayees() {
+        List<Vente> ventesPayees = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT v.id_vente, v.id_client, c.nom_client, c.prenom_client, v.type_vente, v.montant_total, v.date_vente, vp.date_paiement " +
+                    "FROM ventes_payees vp " +
+                    "JOIN vente v ON vp.id_vente = v.id_vente " +
+                    "LEFT JOIN client c ON v.id_client = c.id_client";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                int idVente = rs.getInt("id_vente");
+                Client client = new Client(rs.getInt("id_client"), rs.getString("nom_client"), rs.getString("prenom_client"), null, null, null, null, null);
+                String typeVente = rs.getString("type_vente");
+                double montantTotal = rs.getDouble("montant_total");
+                LocalDate dateVente = rs.getDate("date_vente").toLocalDate();
+                LocalDate datePaiement = rs.getDate("date_paiement").toLocalDate();
+                ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, "Payée", lignesVente, datePaiement);
+                ventesPayees.add(vente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ventesPayees;
     }
 }

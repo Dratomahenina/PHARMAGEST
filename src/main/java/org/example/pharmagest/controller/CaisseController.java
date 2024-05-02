@@ -4,11 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.example.pharmagest.dao.VenteDAO;
 import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Vente;
+
+import java.io.IOException;
 
 public class CaisseController {
 
@@ -118,10 +124,16 @@ public class CaisseController {
 
     @FXML
     private void handleCommandesPayees() {
-        ObservableList<Vente> ventesEnAttente = FXCollections.observableArrayList(venteDAO.getAllVentes().stream()
-                .filter(vente -> vente.getStatut().equals("En attente"))
-                .toList());
-        venteTableView.setItems(ventesEnAttente);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/pharmagest/commandespayees.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Commandes Payées");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

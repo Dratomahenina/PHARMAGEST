@@ -86,8 +86,7 @@ public class CaisseDAO {
 
                 ObservableList<LigneVente> lignesVente = FXCollections.observableArrayList(getLignesVenteByIdVente(idVente));
 
-                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente);
-                ventes.add(vente);
+                Vente vente = new Vente(idVente, client, typeVente, montantTotal, dateVente, statut, lignesVente, null);                ventes.add(vente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
