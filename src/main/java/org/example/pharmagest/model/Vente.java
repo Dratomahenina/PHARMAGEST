@@ -15,7 +15,7 @@ public class Vente {
     private StringProperty statut;
     private ObservableList<LigneVente> lignesVente;
     private ObjectProperty<LocalDate> datePaiement;
-
+    private DoubleProperty profit;
 
     public Vente(int idVente, Client client, String typeVente, double montantTotal, LocalDate dateVente, String statut, ObservableList<LigneVente> lignesVente, LocalDate datePaiement) {
         this.idVente = new SimpleIntegerProperty(idVente);
@@ -24,8 +24,9 @@ public class Vente {
         this.montantTotal = new SimpleDoubleProperty(montantTotal);
         this.dateVente = new SimpleObjectProperty<>(dateVente);
         this.statut = new SimpleStringProperty(statut);
-        this.lignesVente = FXCollections.observableArrayList(lignesVente);
+        this.lignesVente = lignesVente != null ? FXCollections.observableArrayList(lignesVente) : FXCollections.observableArrayList();
         this.datePaiement = new SimpleObjectProperty<>(datePaiement);
+        this.profit = new SimpleDoubleProperty(0);
     }
 
     // Getters et setters
@@ -122,4 +123,15 @@ public class Vente {
         this.datePaiement.set(datePaiement);
     }
 
+    public double getProfit() {
+        return profit.get();
+    }
+
+    public DoubleProperty profitProperty() {
+        return profit;
+    }
+
+    public void setProfit(double profit) {
+        this.profit.set(profit);
+    }
 }

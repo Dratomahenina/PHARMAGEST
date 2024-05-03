@@ -10,6 +10,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class MedicamentDAO {
 
     public void addMedicament(Medicament medicament) {
@@ -212,4 +217,21 @@ public class MedicamentDAO {
         }
         return medicaments;
     }
+
+    public int getStockAlerts(int threshold) {
+        int stockAlerts = 0;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT COUNT(*) AS stock_alerts FROM medicament WHERE quantite_medicament < ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, threshold);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stockAlerts = rs.getInt("stock_alerts");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stockAlerts;
+    }
+
 }

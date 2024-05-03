@@ -196,7 +196,7 @@ public class DashboardMenuController {
                 btnFamille.setVisible(true);
                 btnForme.setVisible(true);
             } else if (userRole.equals("vendeur")) {
-                btnDash.setVisible(false);
+                btnDash.setVisible(true);
                 btnClient.setVisible(true);
                 btnVente.setVisible(true);
                 btnCaisse.setVisible(false);
@@ -207,7 +207,7 @@ public class DashboardMenuController {
                 btnFamille.setVisible(false);
                 btnForme.setVisible(false);
             } else if (userRole.equals("caissier")) {
-                btnDash.setVisible(false);
+                btnDash.setVisible(true);
                 btnClient.setVisible(false);
                 btnVente.setVisible(false);
                 btnCaisse.setVisible(true);
