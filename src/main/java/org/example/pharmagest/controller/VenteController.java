@@ -140,12 +140,14 @@ public class VenteController {
         avecOrdonnanceRadio.setOnAction(event -> {
             clientSelectionVBox.setVisible(true);
             refreshClientTableView();
+            updateTypeVenteLabel();
         });
 
         sansOrdonnanceRadio.setOnAction(event -> {
             clientSelectionVBox.setVisible(false);
             clientTableView.getSelectionModel().clearSelection();
             detailsClientLabel.setText("");
+            updateTypeVenteLabel();
         });
 
         clientTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -172,6 +174,15 @@ public class VenteController {
         detailsTypeVenteLabel.setText("Sans Ordonnance");
         searchMedicamentField.clear();
         medicamentTableView.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void updateTypeVenteLabel() {
+        if (avecOrdonnanceRadio.isSelected()) {
+            detailsTypeVenteLabel.setText("Avec Ordonnance");
+        } else {
+            detailsTypeVenteLabel.setText("Sans Ordonnance");
+        }
     }
 
     @FXML

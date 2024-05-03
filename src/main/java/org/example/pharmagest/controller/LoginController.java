@@ -4,9 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.pharmagest.utils.DatabaseConnection;
 
@@ -39,9 +37,25 @@ public class LoginController {
     }
 
     @FXML
+    private Label errorLabel;
+
+    private void showErrorMessage(String message) {
+        errorLabel.setText(message);
+    }
+
+    @FXML
     private void onLoginButtonClick() {
         String username = usernameField.getText();
         String password = passwordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Champs manquants");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez remplir tous les champs.");
+            alert.showAndWait();
+            return;
+        }
 
         int id_utilisateur = authenticateUser(username, password);
         System.out.println("ID de l'utilisateur après authentification : " + id_utilisateur);

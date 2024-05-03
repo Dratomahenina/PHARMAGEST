@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.example.pharmagest.model.Client;
 import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Vente;
 
@@ -11,6 +12,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 
 public class FactureGenerator {
@@ -47,10 +52,26 @@ public class FactureGenerator {
 
             // Ajout des informations du client (si applicable)
             if (vente.getClient() != null) {
-                Paragraph clientInfo = new Paragraph("Client : " + vente.getClient().getNomClient() + " " + vente.getClient().getPrenomClient() + "\nAdresse : " + vente.getClient().getAdresseClient() + "\nTél : " + vente.getClient().getTelephoneClient());
-                clientInfo.setSpacingBefore(20);
-                document.add(clientInfo);
+                int clientId = vente.getClient().getIdClient();
+                Client client = getClientById(clientId);
+
+                if (client != null) {
+                    Paragraph clientInfo = new Paragraph();
+                    clientInfo.add("Client : " + client.getNomClient() + " " + client.getPrenomClient() + "\n");
+
+                    if (client.getAdresseClient() != null && !client.getAdresseClient().isEmpty()) {
+                        clientInfo.add("Adresse : " + client.getAdresseClient() + "\n");
+                    }
+
+                    if (client.getTelephoneClient() != null && !client.getTelephoneClient().isEmpty()) {
+                        clientInfo.add("Tél : " + client.getTelephoneClient() + "\n");
+                    }
+
+                    clientInfo.setSpacingBefore(20);
+                    document.add(clientInfo);
+                }
             }
+
 
             // Ajout du tableau des médicaments
             PdfPTable table = new PdfPTable(4);
@@ -93,4 +114,31 @@ public class FactureGenerator {
             e.printStackTrace();
         }
     }
+
+    private static Client getClientById(int clientId) {
+        Client client = null;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM client WHERE id_client = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, clientId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        rs.getDate("date_naissance_client").toLocalDate(),
+                        rs.getString("adresse_client"),
+                        rs.getString("telephone_client"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client;
+    }
+
 }

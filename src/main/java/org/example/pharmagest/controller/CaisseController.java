@@ -110,20 +110,30 @@ public class CaisseController {
     private void handleValiderPaiement() {
         Vente selectedVente = venteTableView.getSelectionModel().getSelectedItem();
         if (selectedVente != null && selectedVente.getStatut().equals("En attente")) {
-            double montantDonne = Double.parseDouble(montantDonneTextField.getText());
-            double montantRendu = montantDonne - selectedVente.getMontantTotal();
-            montantRenduLabel.setText(String.format("%.2f", montantRendu));
+            String montantDonneString = montantDonneTextField.getText();
+            if (!montantDonneString.isEmpty()) {
+                double montantDonne = Double.parseDouble(montantDonneString);
+                double montantRendu = montantDonne - selectedVente.getMontantTotal();
+                montantRenduLabel.setText(String.format("%.2f", montantRendu));
 
-            selectedVente.setStatut("Payée");
-            venteDAO.updateVente(selectedVente);
-            venteDAO.enregistrerVentePayee(selectedVente);
+                selectedVente.setStatut("Payée");
+                venteDAO.updateVente(selectedVente);
+                venteDAO.enregistrerVentePayee(selectedVente);
 
-            // Génération de la facture
-            String filePath = "Factures/facture_" + selectedVente.getIdVente() + ".pdf";
-            FactureGenerator.generateFacture(selectedVente, filePath);
+                // Génération de la facture
+                String filePath = "Factures/facture_" + selectedVente.getIdVente() + ".pdf";
+                FactureGenerator.generateFacture(selectedVente, filePath);
 
-            refreshVenteTableView();
-            montantDonneTextField.clear();
+                refreshVenteTableView();
+                montantDonneTextField.clear();
+            } else {
+                // Afficher un message d'erreur ou une alerte
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Montant invalide");
+                alert.setContentText("Veuillez saisir un montant valide.");
+                alert.showAndWait();
+            }
         }
     }
 
