@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import org.example.pharmagest.dao.VenteDAO;
 import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Vente;
+import org.example.pharmagest.utils.FactureGenerator;
 
 import java.io.IOException;
 
@@ -116,6 +117,10 @@ public class CaisseController {
             selectedVente.setStatut("Payée");
             venteDAO.updateVente(selectedVente);
             venteDAO.enregistrerVentePayee(selectedVente);
+
+            // Génération de la facture
+            String filePath = "Factures/facture_" + selectedVente.getIdVente() + ".pdf";
+            FactureGenerator.generateFacture(selectedVente, filePath);
 
             refreshVenteTableView();
             montantDonneTextField.clear();

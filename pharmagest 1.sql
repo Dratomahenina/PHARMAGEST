@@ -5,7 +5,7 @@
 -- Dumped from database version 16.2
 -- Dumped by pg_dump version 16.2
 
--- Started on 2024-05-03 03:40:43
+-- Started on 2024-05-03 04:21:58
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -807,6 +807,11 @@ COPY public.ligne_vente (id_ligne_vente, id_vente, id_medicament, quantite, prix
 11	8	3	10	120.00	1200.00
 12	8	6	2	60.00	120.00
 13	8	1	2	150.00	300.00
+14	9	1	3	150.00	450.00
+15	9	6	2	60.00	120.00
+16	9	11	5	180.00	900.00
+17	10	2	2	75.00	150.00
+18	10	6	1	60.00	60.00
 \.
 
 
@@ -818,8 +823,8 @@ COPY public.ligne_vente (id_ligne_vente, id_vente, id_medicament, quantite, prix
 
 COPY public.login_historique (id_login, id_utilisateur, nom_utilisateur, role, date_heure) FROM stdin;
 6	2	loic	caissier	2024-04-10 11:57:42.43989
-5	1	kim	admin	2024-05-03 03:37:40.787441
 236	45	test	admin	2024-05-01 23:30:18.408543
+5	1	kim	admin	2024-05-03 04:19:40.881354
 \.
 
 
@@ -832,12 +837,12 @@ COPY public.login_historique (id_login, id_utilisateur, nom_utilisateur, role, d
 COPY public.medicament (id_medicament, nom_medicament, description_medicament, id_fournisseur, id_famille, id_forme, statut, quantite_medicament, prix_vente, prix_fournisseur) FROM stdin;
 7	Ventoline	Bronchodilatateur	2	6	7	actif	40	100.00	70.00
 8	Vogalene	Antiémétique	3	7	8	actif	40	150.00	100.00
-11	test	test test	7	14	2	En cours	20	180.00	140.00
 5	Levothyrox	Hormone thyroïdienne de synthèse	5	4	5	actif	30	200.00	150.00
 3	Spasfon	Antispasmodique	3	2	3	actif	30	120.00	80.00
-6	Smecta	Pansement digestif	1	5	6	actif	38	60.00	40.00
-1	Doliprane	Antidouleur et antipyrétique	1	1	1	actif	48	150.00	100.00
-2	Aspirin	Antidouleur, antipyrétique et antiagrégant plaquettaire	2	1	2	actif	10	75.00	50.00
+1	Doliprane	Antidouleur et antipyrétique	1	1	1	actif	45	150.00	100.00
+11	test	test test	7	14	2	En cours	15	180.00	140.00
+2	Aspirin	Antidouleur, antipyrétique et antiagrégant plaquettaire	2	1	2	actif	8	75.00	50.00
+6	Smecta	Pansement digestif	1	5	6	actif	35	60.00	40.00
 10	Efferalgan	Antidouleur et antipyrétique	5	1	10	actif	10	120.00	90.00
 4	Maalox	Antiacide et anti-ulcéreux	4	3	4	actif	20	90.00	0.00
 9	Kardegic	Antiagrégant plaquettaire	4	1	9	actif	30	80.00	60.00
@@ -866,13 +871,15 @@ COPY public.utilisateurs (id_utilisateur, nom_utilisateur, mot_de_passe, role, d
 
 COPY public.vente (id_vente, id_client, type_vente, montant_total, date_vente, statut) FROM stdin;
 4	12	Avec Ordonnance	1200.00	2024-05-02	Payée
-6	\N	Sans Ordonnance	150.00	2024-05-03	En attente
 3	2	Sans Ordonnance	2550.00	2024-05-02	Payée
-7	\N	Sans Ordonnance	3600.00	2024-05-03	En attente
 2	1	Avec Ordonnance	300.00	2024-05-02	Payée
 5	\N	Sans Ordonnance	300.00	2024-05-03	Payée
 1	1	Avec Ordonnance	200.00	2024-05-02	Payée
 8	12	Avec Ordonnance	2520.00	2024-05-03	Payée
+6	\N	Sans Ordonnance	150.00	2024-05-03	Payée
+9	8	Avec Ordonnance	1470.00	2024-05-03	Payée
+7	\N	Sans Ordonnance	3600.00	2024-05-03	Payée
+10	1	Avec Ordonnance	210.00	2024-05-03	Payée
 \.
 
 
@@ -893,9 +900,9 @@ COPY public.vente_caisse (id_vente, id_caisse) FROM stdin;
 --
 
 COPY public.ventes_payees (id_vente_payee, id_vente, id_client, type_vente, montant_total, date_vente, date_paiement) FROM stdin;
-1	5	0	Sans Ordonnance	300.00	2024-05-03	2024-05-03
-2	1	1	Avec Ordonnance	200.00	2024-05-02	2024-05-03
-3	8	12	Avec Ordonnance	2520.00	2024-05-03	2024-05-03
+5	9	8	Avec Ordonnance	1470.00	2024-05-03	2024-05-03
+6	7	0	Sans Ordonnance	3600.00	2024-05-03	2024-05-03
+7	10	1	Avec Ordonnance	210.00	2024-05-03	2024-05-03
 \.
 
 
@@ -959,7 +966,7 @@ SELECT pg_catalog.setval('public.fournisseur_id_fournisseur_seq', 10, true);
 -- Name: ligne_vente_id_ligne_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 13, true);
+SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 18, true);
 
 
 --
@@ -968,7 +975,7 @@ SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 13, true);
 -- Name: login_historique_id_login_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.login_historique_id_login_seq', 294, true);
+SELECT pg_catalog.setval('public.login_historique_id_login_seq', 298, true);
 
 
 --
@@ -995,7 +1002,7 @@ SELECT pg_catalog.setval('public.utilisateurs_id_utilisateur_seq', 45, true);
 -- Name: vente_id_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.vente_id_vente_seq', 8, true);
+SELECT pg_catalog.setval('public.vente_id_vente_seq', 10, true);
 
 
 --
@@ -1004,7 +1011,7 @@ SELECT pg_catalog.setval('public.vente_id_vente_seq', 8, true);
 -- Name: ventes_payees_id_vente_payee_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ventes_payees_id_vente_payee_seq', 3, true);
+SELECT pg_catalog.setval('public.ventes_payees_id_vente_payee_seq', 7, true);
 
 
 --
@@ -1240,7 +1247,7 @@ ALTER TABLE ONLY public.vente
     ADD CONSTRAINT vente_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client);
 
 
--- Completed on 2024-05-03 03:40:43
+-- Completed on 2024-05-03 04:21:58
 
 --
 -- PostgreSQL database dump complete

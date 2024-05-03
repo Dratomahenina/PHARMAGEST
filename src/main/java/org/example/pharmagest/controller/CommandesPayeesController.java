@@ -5,11 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import org.example.pharmagest.dao.VenteDAO;
 import org.example.pharmagest.model.LigneVente;
 import org.example.pharmagest.model.Vente;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class CommandesPayeesController {
@@ -53,9 +58,15 @@ public class CommandesPayeesController {
         datePaiementColumn.setCellValueFactory(new PropertyValueFactory<>("datePaiement"));
 
         actionColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button ouvrirFactureButton = new Button("Ouvrir Facture");
             private final Button supprimerButton = new Button("Supprimer");
 
             {
+                ouvrirFactureButton.setOnAction(event -> {
+                    Vente vente = getTableView().getItems().get(getIndex());
+                    ouvrirFacture(vente);
+                });
+
                 supprimerButton.setOnAction(event -> {
                     Vente vente = getTableView().getItems().get(getIndex());
                     handleSupprimerVente(vente);
@@ -68,7 +79,7 @@ public class CommandesPayeesController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(supprimerButton);
+                    setGraphic(new HBox(ouvrirFactureButton, supprimerButton));
                 }
             }
         });
@@ -84,5 +95,14 @@ public class CommandesPayeesController {
     private void handleSupprimerVente(Vente vente) {
         venteDAO.deleteVentePayee(vente);
         refreshCommandesPayeesTableView();
+    }
+
+    private void ouvrirFacture(Vente vente) {
+        String filePath = "Factures/facture_" + vente.getIdVente() + ".pdf";
+        try {
+            Desktop.getDesktop().open(new File(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
