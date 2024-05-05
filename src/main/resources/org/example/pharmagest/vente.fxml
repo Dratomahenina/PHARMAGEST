@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1200.0" spacing="20.0" style="-fx-background-color: #F4F4F4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.VenteController">
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #F4F4F4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pharmagest.controller.VenteController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -67,10 +67,10 @@
     <HBox fx:id="tableContainer" alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
         <TableView fx:id="medicamentTableView" prefWidth="550.0" style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-width: 1px; -fx-border-radius: 5px;">
             <columns>
-                <TableColumn fx:id="nomMedicamentColumn" prefWidth="162.40002059936523" text="Médicament" />
-                <TableColumn fx:id="prixUnitaireColumn" prefWidth="111.19999694824219" text="Prix Unitaire" />
-                <TableColumn fx:id="stockColumn" prefWidth="84.800048828125" text="Stock" />
-                <TableColumn fx:id="actionColumn" prefWidth="186.39997558593745" text="Action" />
+                <TableColumn fx:id="nomMedicamentColumn" prefWidth="184.79998397827148" text="Médicament" />
+                <TableColumn fx:id="prixUnitaireColumn" prefWidth="86.40003967285156" text="Prix Unitaire" />
+                <TableColumn fx:id="stockColumn" prefWidth="75.20001220703125" text="Stock" />
+                <TableColumn fx:id="actionColumn" prefWidth="101.60003662109375" text="Action" />
             </columns>
         </TableView>
 
@@ -103,10 +103,10 @@
             <TableView fx:id="medicamentVenteTableView" prefHeight="189.0" prefWidth="550.0" style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-width: 1px; -fx-border-radius: 5px;">
                 <columns>
                     <TableColumn fx:id="nomMedicamentVenteColumn" prefWidth="155.9999930858612" text="Médicament" />
-                    <TableColumn fx:id="quantiteMedicamentVenteColumn" prefWidth="69.5999755859375" text="Quantité" />
-                    <TableColumn fx:id="prixUnitaireVenteColumn" prefWidth="133.60000610351562" text="Prix Unitaire" />
-                    <TableColumn fx:id="prixTotalVenteColumn" prefWidth="120.800048828125" text="Prix Total" />
-                    <TableColumn fx:id="actionVenteColumn" prefWidth="69.5999755859375" text="Action" />
+                    <TableColumn fx:id="quantiteMedicamentVenteColumn" prefWidth="57.5999755859375" text="Quantité" />
+                    <TableColumn fx:id="prixUnitaireVenteColumn" prefWidth="82.40011596679688" text="Prix Unitaire" />
+                    <TableColumn fx:id="prixTotalVenteColumn" prefWidth="74.4000244140625" text="Prix Total" />
+                    <TableColumn fx:id="actionVenteColumn" prefWidth="76.7999267578125" text="Action" />
                 </columns>
             </TableView>
             <GridPane hgap="10.0" vgap="10.0">

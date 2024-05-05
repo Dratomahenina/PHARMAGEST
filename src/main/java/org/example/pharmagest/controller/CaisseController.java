@@ -53,6 +53,11 @@ public class CaisseController {
     private VenteDAO venteDAO;
 
     @FXML
+    private void handleRefresh() {
+        refreshVenteTableView();
+    }
+
+    @FXML
     public void initialize() {
         venteDAO = new VenteDAO();
 

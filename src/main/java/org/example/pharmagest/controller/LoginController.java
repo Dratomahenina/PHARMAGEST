@@ -1,10 +1,14 @@
 package org.example.pharmagest.controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.pharmagest.utils.DatabaseConnection;
 
@@ -12,7 +16,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -44,6 +47,27 @@ public class LoginController {
     }
 
     @FXML
+    private StackPane loadingPane;
+
+    @FXML
+    private VBox loginContent;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    private void showLoadingIndicator() {
+        loginContent.setEffect(new GaussianBlur(10));
+        loadingPane.setVisible(true);
+        progressIndicator.setProgress(-1);
+    }
+
+    private void hideLoadingIndicator() {
+        loginContent.setEffect(null);
+        loadingPane.setVisible(false);
+        progressIndicator.setProgress(0);
+    }
+
+    @FXML
     private void onLoginButtonClick() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -57,15 +81,36 @@ public class LoginController {
             return;
         }
 
-        int id_utilisateur = authenticateUser(username, password);
-        System.out.println("ID de l'utilisateur après authentification : " + id_utilisateur);
-        if (id_utilisateur > 0) {
-            String userRole = getUserRole(id_utilisateur);
-            logUserLogin(id_utilisateur, username, userRole); // Enregistrer l'historique de connexion
-            openDashboard(id_utilisateur, userRole);
-        } else {
-            System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
-        }
+        showLoadingIndicator();
+
+        Task<Integer> loginTask = new Task<>() {
+            @Override
+            protected Integer call() throws Exception {
+                int id_utilisateur = authenticateUser(username, password);
+                return id_utilisateur;
+            }
+        };
+
+        loginTask.setOnSucceeded(event -> {
+            int id_utilisateur = loginTask.getValue();
+            System.out.println("ID de l'utilisateur après authentification : " + id_utilisateur);
+            if (id_utilisateur > 0) {
+                String userRole = getUserRole(id_utilisateur);
+                logUserLogin(id_utilisateur, username, userRole);
+                openDashboard(id_utilisateur, userRole);
+            } else {
+                hideLoadingIndicator();
+                System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
+            }
+        });
+
+        loginTask.setOnFailed(event -> {
+            hideLoadingIndicator();
+            System.out.println("Erreur lors de l'authentification.");
+        });
+
+        Thread loginThread = new Thread(loginTask);
+        loginThread.start();
     }
 
     private void handleKeyPressed(KeyEvent event) {
@@ -87,6 +132,10 @@ public class LoginController {
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Tableau de bord");
+
+            // Masquer le loading une fois le tableau de bord chargé
+            stage.setOnShown(e -> hideLoadingIndicator());
+
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,4 +197,5 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
 }
