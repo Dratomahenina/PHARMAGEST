@@ -135,4 +135,29 @@ public class ClientDAO {
         return client;
     }
 
+    public List<Client> getClientsActifs() {
+        List<Client> clients = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM client WHERE statut = 'actif'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                Client client = new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        rs.getDate("date_naissance_client").toLocalDate(),
+                        rs.getString("adresse_client"),
+                        rs.getString("telephone_client"),
+                        rs.getString("statut"),
+                        rs.getDate("date_creation").toLocalDate()
+                );
+                clients.add(client);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clients;
+    }
+
 }

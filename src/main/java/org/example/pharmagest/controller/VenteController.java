@@ -303,12 +303,12 @@ public class VenteController {
     }
 
     private void refreshClientTableView() {
-        ObservableList<Client> clients = FXCollections.observableArrayList(clientDAO.getAllClients());
+        ObservableList<Client> clients = FXCollections.observableArrayList(clientDAO.getClientsActifs());
         clientTableView.setItems(clients);
     }
 
     private void refreshMedicamentTableView() {
-        ObservableList<Medicament> medicaments = FXCollections.observableArrayList(medicamentDAO.getAllMedicaments());
+        ObservableList<Medicament> medicaments = FXCollections.observableArrayList(medicamentDAO.getMedicamentsActifs());
         medicamentTableView.setItems(medicaments);
     }
 

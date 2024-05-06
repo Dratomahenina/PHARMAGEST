@@ -234,4 +234,36 @@ public class MedicamentDAO {
         return stockAlerts;
     }
 
+    public List<Medicament> getMedicamentsActifs() {
+        List<Medicament> medicaments = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT m.*, f.nom_fournisseur, fa.nom_famille, fo.nom_forme " +
+                    "FROM medicament m " +
+                    "JOIN fournisseur f ON m.id_fournisseur = f.id_fournisseur " +
+                    "JOIN famille fa ON m.id_famille = fa.id_famille " +
+                    "JOIN forme fo ON m.id_forme = fo.id_forme " +
+                    "WHERE m.statut = 'actif'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                Medicament medicament = new Medicament(
+                        rs.getInt("id_medicament"),
+                        rs.getString("nom_medicament"),
+                        rs.getString("description_medicament"),
+                        new Fournisseur(rs.getInt("id_fournisseur"), rs.getString("nom_fournisseur"), null, null, null, null, null),
+                        new Famille(rs.getInt("id_famille"), rs.getString("nom_famille"), null, null),
+                        new Forme(rs.getInt("id_forme"), rs.getString("nom_forme"), null, null),
+                        rs.getInt("quantite_medicament"),
+                        rs.getDouble("prix_vente"),
+                        rs.getDouble("prix_fournisseur"),
+                        rs.getString("statut")
+                );
+                medicaments.add(medicament);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return medicaments;
+    }
+
 }

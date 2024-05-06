@@ -5,7 +5,7 @@
 -- Dumped from database version 16.2
 -- Dumped by pg_dump version 16.2
 
--- Started on 2024-05-05 15:29:34
+-- Started on 2024-05-06 13:07:20
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -611,6 +611,10 @@ ALTER TABLE ONLY public.ventes_payees ALTER COLUMN id_vente_payee SET DEFAULT ne
 
 COPY public.approvisionnement (id_approvisionnement, id_medicament, id_fournisseur, quantite_commandee, date_approvisionnement, statut, prix_fournisseur, quantite_recue, commentaire) FROM stdin;
 17	10	5	22	2024-05-05	Reçu	90.00	\N	Efferalgan
+18	2	2	32	2024-05-07	Reçu	50.00	\N	Aspirin
+19	11	7	40	2024-05-08	Reçu	140.00	\N	test
+20	7	2	27	2024-05-10	Reçu	70.00	\N	Ventoline
+21	8	3	37	2024-05-07	Reçu	100.00	\N	Vogalene
 \.
 
 
@@ -629,7 +633,9 @@ COPY public.client (id_client, nom_client, prenom_client, date_naissance_client,
 8	Raforce	Elyse	1999-05-08	Albion	87654321	2024-05-02	actif
 12	test	test	1999-05-08	test	87654321	2024-05-02	actif
 13	test1	test1	1994-10-19	test1	00000000	2024-05-03	actif
-14	test2	test2	1999-08-03	test2	00000000	2024-05-03	actif
+16	test4	test4	1999-09-10	test4	44444444	2024-05-05	inactif
+15	test3	test3	2001-05-16	test3	33333333	2024-05-05	inactif
+14	test2	test2	1999-08-03	test2	00000000	2024-05-03	inactif
 \.
 
 
@@ -756,6 +762,9 @@ COPY public.ligne_vente (id_ligne_vente, id_vente, id_medicament, quantite, prix
 36	19	7	10	100.00	1000.00
 37	19	8	10	150.00	1500.00
 38	20	9	1	80.00	80.00
+39	21	9	1	80.00	80.00
+40	21	5	5	200.00	1000.00
+41	22	11	1	180.00	180.00
 \.
 
 
@@ -767,9 +776,9 @@ COPY public.ligne_vente (id_ligne_vente, id_vente, id_medicament, quantite, prix
 
 COPY public.login_historique (id_login, id_utilisateur, nom_utilisateur, role, date_heure) FROM stdin;
 6	2	loic	caissier	2024-05-05 14:52:31.051735
-321	3	andi	vendeur	2024-05-05 14:53:44.629343
-5	1	kim	admin	2024-05-05 15:28:00.30723
 236	45	test	admin	2024-05-01 23:30:18.408543
+321	3	andi	vendeur	2024-05-06 12:49:05.437867
+5	1	kim	admin	2024-05-06 13:02:46.771235
 \.
 
 
@@ -780,17 +789,17 @@ COPY public.login_historique (id_login, id_utilisateur, nom_utilisateur, role, d
 --
 
 COPY public.medicament (id_medicament, nom_medicament, description_medicament, id_fournisseur, id_famille, id_forme, statut, quantite_medicament, prix_vente, prix_fournisseur) FROM stdin;
-5	Levothyrox	Hormone thyroïdienne de synthèse	5	4	5	actif	30	200.00	150.00
+11	test	test test	7	14	2	inactif	50	180.00	140.00
 3	Spasfon	Antispasmodique	3	2	3	actif	30	120.00	80.00
-2	Aspirin	Antidouleur, antipyrétique et antiagrégant plaquettaire	2	1	2	actif	8	75.00	50.00
 1	Doliprane	Antidouleur et antipyrétique	1	1	1	actif	30	150.00	100.00
 6	Smecta	Pansement digestif	1	5	6	actif	30	60.00	40.00
-11	test	test test	7	14	2	En cours	11	180.00	140.00
-7	Ventoline	Bronchodilatateur	2	6	7	actif	23	100.00	70.00
-8	Vogalene	Antiémétique	3	7	8	actif	23	150.00	100.00
-10	Efferalgan	Antidouleur et antipyrétique	5	1	10	En cours	30	120.00	90.00
-9	Kardegic	Antiagrégant plaquettaire	4	1	9	actif	21	80.00	60.00
+9	Kardegic	Antiagrégant plaquettaire	4	1	9	actif	20	80.00	60.00
+5	Levothyrox	Hormone thyroïdienne de synthèse	5	4	5	actif	25	200.00	150.00
 4	Maalox	Antiacide et anti-ulcéreux	4	3	4	actif	20	90.00	0.00
+10	Efferalgan	Antidouleur et antipyrétique	5	1	10	actif	30	120.00	90.00
+2	Aspirin	Antidouleur, antipyrétique et antiagrégant plaquettaire	2	1	2	actif	40	75.00	50.00
+7	Ventoline	Bronchodilatateur	2	6	7	actif	50	100.00	70.00
+8	Vogalene	Antiémétique	3	7	8	actif	60	150.00	100.00
 \.
 
 
@@ -835,6 +844,8 @@ COPY public.vente (id_vente, id_client, type_vente, montant_total, date_vente, s
 18	4	Avec Ordonnance	460.00	2024-05-04	Payée
 19	\N	Sans Ordonnance	2500.00	2024-05-04	Payée
 20	\N	Sans Ordonnance	80.00	2024-05-05	Payée
+21	16	Avec Ordonnance	1080.00	2024-05-05	Payée
+22	8	Avec Ordonnance	180.00	2024-05-06	Payée
 \.
 
 
@@ -848,6 +859,8 @@ COPY public.ventes_payees (id_vente_payee, id_vente, id_client, type_vente, mont
 15	18	4	Avec Ordonnance	460.00	2024-05-04	2024-05-04
 16	19	0	Sans Ordonnance	2500.00	2024-05-04	2024-05-04
 17	20	0	Sans Ordonnance	80.00	2024-05-05	2024-05-05
+18	21	16	Avec Ordonnance	1080.00	2024-05-05	2024-05-05
+19	22	8	Avec Ordonnance	180.00	2024-05-06	2024-05-06
 \.
 
 
@@ -857,7 +870,7 @@ COPY public.ventes_payees (id_vente_payee, id_vente, id_client, type_vente, mont
 -- Name: approvisionnement_id_approvisionnement_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.approvisionnement_id_approvisionnement_seq', 17, true);
+SELECT pg_catalog.setval('public.approvisionnement_id_approvisionnement_seq', 21, true);
 
 
 --
@@ -866,7 +879,7 @@ SELECT pg_catalog.setval('public.approvisionnement_id_approvisionnement_seq', 17
 -- Name: client_id_client_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.client_id_client_seq', 14, true);
+SELECT pg_catalog.setval('public.client_id_client_seq', 16, true);
 
 
 --
@@ -902,7 +915,7 @@ SELECT pg_catalog.setval('public.fournisseur_id_fournisseur_seq', 10, true);
 -- Name: ligne_vente_id_ligne_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 38, true);
+SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 41, true);
 
 
 --
@@ -911,7 +924,7 @@ SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 38, true);
 -- Name: login_historique_id_login_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.login_historique_id_login_seq', 344, true);
+SELECT pg_catalog.setval('public.login_historique_id_login_seq', 350, true);
 
 
 --
@@ -938,7 +951,7 @@ SELECT pg_catalog.setval('public.utilisateurs_id_utilisateur_seq', 45, true);
 -- Name: vente_id_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.vente_id_vente_seq', 20, true);
+SELECT pg_catalog.setval('public.vente_id_vente_seq', 22, true);
 
 
 --
@@ -947,7 +960,7 @@ SELECT pg_catalog.setval('public.vente_id_vente_seq', 20, true);
 -- Name: ventes_payees_id_vente_payee_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ventes_payees_id_vente_payee_seq', 17, true);
+SELECT pg_catalog.setval('public.ventes_payees_id_vente_payee_seq', 19, true);
 
 
 --
@@ -1147,7 +1160,7 @@ ALTER TABLE ONLY public.vente
     ADD CONSTRAINT vente_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client);
 
 
--- Completed on 2024-05-05 15:29:34
+-- Completed on 2024-05-06 13:07:20
 
 --
 -- PostgreSQL database dump complete

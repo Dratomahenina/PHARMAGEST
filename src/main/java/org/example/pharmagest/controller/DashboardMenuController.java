@@ -197,7 +197,7 @@ public class DashboardMenuController {
                 btnForme.setVisible(true);
             } else if (userRole.equals("vendeur")) {
                 btnDash.setVisible(true);
-                btnClient.setVisible(true);
+                btnClient.setVisible(false);
                 btnVente.setVisible(true);
                 btnCaisse.setVisible(false);
                 btnMedicament.setVisible(false);
