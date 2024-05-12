@@ -5,7 +5,7 @@
 -- Dumped from database version 16.2
 -- Dumped by pg_dump version 16.2
 
--- Started on 2024-05-06 13:07:20
+-- Started on 2024-05-12 23:55:31
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,7 +19,31 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 237 (class 1255 OID 16712)
+-- TOC entry 240 (class 1255 OID 17322)
+-- Name: get_clients_by_medicament(character varying); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public.get_clients_by_medicament(IN p_nom_medicament character varying)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    CREATE TEMPORARY TABLE clients_temp AS
+    SELECT c.id_client, c.nom_client, c.prenom_client, c.telephone_client
+    FROM client c
+    INNER JOIN ventes_payees vp ON c.id_client = vp.id_client
+    INNER JOIN vente v ON vp.id_vente = v.id_vente
+    INNER JOIN ligne_vente lv ON v.id_vente = lv.id_vente
+    INNER JOIN medicament m ON lv.id_medicament = m.id_medicament
+    WHERE m.nom_medicament = p_nom_medicament
+    GROUP BY c.id_client;
+END;
+$$;
+
+
+ALTER PROCEDURE public.get_clients_by_medicament(IN p_nom_medicament character varying) OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1255 OID 16712)
 -- Name: update_login_historique(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -49,7 +73,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 230 (class 1259 OID 16890)
+-- TOC entry 232 (class 1259 OID 16890)
 -- Name: approvisionnement; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -69,7 +93,7 @@ CREATE TABLE public.approvisionnement (
 ALTER TABLE public.approvisionnement OWNER TO postgres;
 
 --
--- TOC entry 229 (class 1259 OID 16889)
+-- TOC entry 231 (class 1259 OID 16889)
 -- Name: approvisionnement_id_approvisionnement_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -85,8 +109,8 @@ CREATE SEQUENCE public.approvisionnement_id_approvisionnement_seq
 ALTER SEQUENCE public.approvisionnement_id_approvisionnement_seq OWNER TO postgres;
 
 --
--- TOC entry 4965 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 4968 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: approvisionnement_id_approvisionnement_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -94,7 +118,7 @@ ALTER SEQUENCE public.approvisionnement_id_approvisionnement_seq OWNED BY public
 
 
 --
--- TOC entry 215 (class 1259 OID 16634)
+-- TOC entry 217 (class 1259 OID 16634)
 -- Name: client; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -113,7 +137,7 @@ CREATE TABLE public.client (
 ALTER TABLE public.client OWNER TO postgres;
 
 --
--- TOC entry 216 (class 1259 OID 16638)
+-- TOC entry 218 (class 1259 OID 16638)
 -- Name: client_id_client_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -129,8 +153,8 @@ CREATE SEQUENCE public.client_id_client_seq
 ALTER SEQUENCE public.client_id_client_seq OWNER TO postgres;
 
 --
--- TOC entry 4966 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 4969 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: client_id_client_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -138,7 +162,7 @@ ALTER SEQUENCE public.client_id_client_seq OWNED BY public.client.id_client;
 
 
 --
--- TOC entry 220 (class 1259 OID 16677)
+-- TOC entry 222 (class 1259 OID 16677)
 -- Name: famille; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -153,7 +177,7 @@ CREATE TABLE public.famille (
 ALTER TABLE public.famille OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 16676)
+-- TOC entry 221 (class 1259 OID 16676)
 -- Name: famille_id_famille_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -169,8 +193,8 @@ CREATE SEQUENCE public.famille_id_famille_seq
 ALTER SEQUENCE public.famille_id_famille_seq OWNER TO postgres;
 
 --
--- TOC entry 4967 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 4970 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: famille_id_famille_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -178,7 +202,7 @@ ALTER SEQUENCE public.famille_id_famille_seq OWNED BY public.famille.id_famille;
 
 
 --
--- TOC entry 222 (class 1259 OID 16686)
+-- TOC entry 224 (class 1259 OID 16686)
 -- Name: forme; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -193,7 +217,7 @@ CREATE TABLE public.forme (
 ALTER TABLE public.forme OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 16685)
+-- TOC entry 223 (class 1259 OID 16685)
 -- Name: forme_id_forme_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -209,8 +233,8 @@ CREATE SEQUENCE public.forme_id_forme_seq
 ALTER SEQUENCE public.forme_id_forme_seq OWNER TO postgres;
 
 --
--- TOC entry 4968 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 4971 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: forme_id_forme_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -218,7 +242,7 @@ ALTER SEQUENCE public.forme_id_forme_seq OWNED BY public.forme.id_forme;
 
 
 --
--- TOC entry 226 (class 1259 OID 16852)
+-- TOC entry 228 (class 1259 OID 16852)
 -- Name: fournisseur; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -236,7 +260,7 @@ CREATE TABLE public.fournisseur (
 ALTER TABLE public.fournisseur OWNER TO postgres;
 
 --
--- TOC entry 225 (class 1259 OID 16851)
+-- TOC entry 227 (class 1259 OID 16851)
 -- Name: fournisseur_id_fournisseur_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -252,8 +276,8 @@ CREATE SEQUENCE public.fournisseur_id_fournisseur_seq
 ALTER SEQUENCE public.fournisseur_id_fournisseur_seq OWNER TO postgres;
 
 --
--- TOC entry 4969 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 4972 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: fournisseur_id_fournisseur_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -261,7 +285,7 @@ ALTER SEQUENCE public.fournisseur_id_fournisseur_seq OWNED BY public.fournisseur
 
 
 --
--- TOC entry 234 (class 1259 OID 17135)
+-- TOC entry 236 (class 1259 OID 17135)
 -- Name: ligne_vente; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -278,7 +302,7 @@ CREATE TABLE public.ligne_vente (
 ALTER TABLE public.ligne_vente OWNER TO postgres;
 
 --
--- TOC entry 233 (class 1259 OID 17134)
+-- TOC entry 235 (class 1259 OID 17134)
 -- Name: ligne_vente_id_ligne_vente_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -294,8 +318,8 @@ CREATE SEQUENCE public.ligne_vente_id_ligne_vente_seq
 ALTER SEQUENCE public.ligne_vente_id_ligne_vente_seq OWNER TO postgres;
 
 --
--- TOC entry 4970 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4973 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: ligne_vente_id_ligne_vente_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -303,7 +327,7 @@ ALTER SEQUENCE public.ligne_vente_id_ligne_vente_seq OWNED BY public.ligne_vente
 
 
 --
--- TOC entry 224 (class 1259 OID 16695)
+-- TOC entry 226 (class 1259 OID 16695)
 -- Name: login_historique; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -319,7 +343,7 @@ CREATE TABLE public.login_historique (
 ALTER TABLE public.login_historique OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 16694)
+-- TOC entry 225 (class 1259 OID 16694)
 -- Name: login_historique_id_login_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -335,8 +359,8 @@ CREATE SEQUENCE public.login_historique_id_login_seq
 ALTER SEQUENCE public.login_historique_id_login_seq OWNER TO postgres;
 
 --
--- TOC entry 4971 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 4974 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: login_historique_id_login_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -344,7 +368,7 @@ ALTER SEQUENCE public.login_historique_id_login_seq OWNED BY public.login_histor
 
 
 --
--- TOC entry 228 (class 1259 OID 16863)
+-- TOC entry 230 (class 1259 OID 16863)
 -- Name: medicament; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -365,7 +389,7 @@ CREATE TABLE public.medicament (
 ALTER TABLE public.medicament OWNER TO postgres;
 
 --
--- TOC entry 227 (class 1259 OID 16862)
+-- TOC entry 229 (class 1259 OID 16862)
 -- Name: medicament_id_medicament_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -381,8 +405,8 @@ CREATE SEQUENCE public.medicament_id_medicament_seq
 ALTER SEQUENCE public.medicament_id_medicament_seq OWNER TO postgres;
 
 --
--- TOC entry 4972 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 4975 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: medicament_id_medicament_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -390,7 +414,7 @@ ALTER SEQUENCE public.medicament_id_medicament_seq OWNED BY public.medicament.id
 
 
 --
--- TOC entry 217 (class 1259 OID 16645)
+-- TOC entry 219 (class 1259 OID 16645)
 -- Name: utilisateurs; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -406,7 +430,7 @@ CREATE TABLE public.utilisateurs (
 ALTER TABLE public.utilisateurs OWNER TO postgres;
 
 --
--- TOC entry 218 (class 1259 OID 16650)
+-- TOC entry 220 (class 1259 OID 16650)
 -- Name: utilisateurs_id_utilisateur_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -422,8 +446,8 @@ CREATE SEQUENCE public.utilisateurs_id_utilisateur_seq
 ALTER SEQUENCE public.utilisateurs_id_utilisateur_seq OWNER TO postgres;
 
 --
--- TOC entry 4973 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 4976 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: utilisateurs_id_utilisateur_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -431,7 +455,7 @@ ALTER SEQUENCE public.utilisateurs_id_utilisateur_seq OWNED BY public.utilisateu
 
 
 --
--- TOC entry 232 (class 1259 OID 17123)
+-- TOC entry 234 (class 1259 OID 17123)
 -- Name: vente; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -448,7 +472,7 @@ CREATE TABLE public.vente (
 ALTER TABLE public.vente OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1259 OID 17122)
+-- TOC entry 233 (class 1259 OID 17122)
 -- Name: vente_id_vente_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -464,8 +488,8 @@ CREATE SEQUENCE public.vente_id_vente_seq
 ALTER SEQUENCE public.vente_id_vente_seq OWNER TO postgres;
 
 --
--- TOC entry 4974 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 4977 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: vente_id_vente_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -473,7 +497,7 @@ ALTER SEQUENCE public.vente_id_vente_seq OWNED BY public.vente.id_vente;
 
 
 --
--- TOC entry 236 (class 1259 OID 17316)
+-- TOC entry 238 (class 1259 OID 17316)
 -- Name: ventes_payees; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -491,7 +515,7 @@ CREATE TABLE public.ventes_payees (
 ALTER TABLE public.ventes_payees OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 17315)
+-- TOC entry 237 (class 1259 OID 17315)
 -- Name: ventes_payees_id_vente_payee_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -507,8 +531,8 @@ CREATE SEQUENCE public.ventes_payees_id_vente_payee_seq
 ALTER SEQUENCE public.ventes_payees_id_vente_payee_seq OWNER TO postgres;
 
 --
--- TOC entry 4975 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4978 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: ventes_payees_id_vente_payee_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -516,7 +540,7 @@ ALTER SEQUENCE public.ventes_payees_id_vente_payee_seq OWNED BY public.ventes_pa
 
 
 --
--- TOC entry 4755 (class 2604 OID 16893)
+-- TOC entry 4758 (class 2604 OID 16893)
 -- Name: approvisionnement id_approvisionnement; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -524,7 +548,7 @@ ALTER TABLE ONLY public.approvisionnement ALTER COLUMN id_approvisionnement SET 
 
 
 --
--- TOC entry 4739 (class 2604 OID 16652)
+-- TOC entry 4742 (class 2604 OID 16652)
 -- Name: client id_client; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -532,7 +556,7 @@ ALTER TABLE ONLY public.client ALTER COLUMN id_client SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 4743 (class 2604 OID 16680)
+-- TOC entry 4746 (class 2604 OID 16680)
 -- Name: famille id_famille; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -540,7 +564,7 @@ ALTER TABLE ONLY public.famille ALTER COLUMN id_famille SET DEFAULT nextval('pub
 
 
 --
--- TOC entry 4746 (class 2604 OID 16689)
+-- TOC entry 4749 (class 2604 OID 16689)
 -- Name: forme id_forme; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -548,7 +572,7 @@ ALTER TABLE ONLY public.forme ALTER COLUMN id_forme SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 4750 (class 2604 OID 16855)
+-- TOC entry 4753 (class 2604 OID 16855)
 -- Name: fournisseur id_fournisseur; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -556,7 +580,7 @@ ALTER TABLE ONLY public.fournisseur ALTER COLUMN id_fournisseur SET DEFAULT next
 
 
 --
--- TOC entry 4759 (class 2604 OID 17138)
+-- TOC entry 4762 (class 2604 OID 17138)
 -- Name: ligne_vente id_ligne_vente; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -564,7 +588,7 @@ ALTER TABLE ONLY public.ligne_vente ALTER COLUMN id_ligne_vente SET DEFAULT next
 
 
 --
--- TOC entry 4749 (class 2604 OID 16698)
+-- TOC entry 4752 (class 2604 OID 16698)
 -- Name: login_historique id_login; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -572,7 +596,7 @@ ALTER TABLE ONLY public.login_historique ALTER COLUMN id_login SET DEFAULT nextv
 
 
 --
--- TOC entry 4753 (class 2604 OID 16866)
+-- TOC entry 4756 (class 2604 OID 16866)
 -- Name: medicament id_medicament; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -580,7 +604,7 @@ ALTER TABLE ONLY public.medicament ALTER COLUMN id_medicament SET DEFAULT nextva
 
 
 --
--- TOC entry 4742 (class 2604 OID 16654)
+-- TOC entry 4745 (class 2604 OID 16654)
 -- Name: utilisateurs id_utilisateur; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -588,7 +612,7 @@ ALTER TABLE ONLY public.utilisateurs ALTER COLUMN id_utilisateur SET DEFAULT nex
 
 
 --
--- TOC entry 4758 (class 2604 OID 17126)
+-- TOC entry 4761 (class 2604 OID 17126)
 -- Name: vente id_vente; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -596,7 +620,7 @@ ALTER TABLE ONLY public.vente ALTER COLUMN id_vente SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 4760 (class 2604 OID 17319)
+-- TOC entry 4763 (class 2604 OID 17319)
 -- Name: ventes_payees id_vente_payee; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -604,8 +628,8 @@ ALTER TABLE ONLY public.ventes_payees ALTER COLUMN id_vente_payee SET DEFAULT ne
 
 
 --
--- TOC entry 4953 (class 0 OID 16890)
--- Dependencies: 230
+-- TOC entry 4956 (class 0 OID 16890)
+-- Dependencies: 232
 -- Data for Name: approvisionnement; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -619,8 +643,8 @@ COPY public.approvisionnement (id_approvisionnement, id_medicament, id_fournisse
 
 
 --
--- TOC entry 4938 (class 0 OID 16634)
--- Dependencies: 215
+-- TOC entry 4941 (class 0 OID 16634)
+-- Dependencies: 217
 -- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -640,8 +664,8 @@ COPY public.client (id_client, nom_client, prenom_client, date_naissance_client,
 
 
 --
--- TOC entry 4943 (class 0 OID 16677)
--- Dependencies: 220
+-- TOC entry 4946 (class 0 OID 16677)
+-- Dependencies: 222
 -- Data for Name: famille; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -676,8 +700,8 @@ COPY public.famille (id_famille, nom_famille, statut, date_creation) FROM stdin;
 
 
 --
--- TOC entry 4945 (class 0 OID 16686)
--- Dependencies: 222
+-- TOC entry 4948 (class 0 OID 16686)
+-- Dependencies: 224
 -- Data for Name: forme; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -698,8 +722,8 @@ COPY public.forme (id_forme, nom_forme, statut, date_creation) FROM stdin;
 
 
 --
--- TOC entry 4949 (class 0 OID 16852)
--- Dependencies: 226
+-- TOC entry 4952 (class 0 OID 16852)
+-- Dependencies: 228
 -- Data for Name: fournisseur; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -718,8 +742,8 @@ COPY public.fournisseur (id_fournisseur, nom_fournisseur, email_fournisseur, tel
 
 
 --
--- TOC entry 4957 (class 0 OID 17135)
--- Dependencies: 234
+-- TOC entry 4960 (class 0 OID 17135)
+-- Dependencies: 236
 -- Data for Name: ligne_vente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -769,22 +793,22 @@ COPY public.ligne_vente (id_ligne_vente, id_vente, id_medicament, quantite, prix
 
 
 --
--- TOC entry 4947 (class 0 OID 16695)
--- Dependencies: 224
+-- TOC entry 4950 (class 0 OID 16695)
+-- Dependencies: 226
 -- Data for Name: login_historique; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.login_historique (id_login, id_utilisateur, nom_utilisateur, role, date_heure) FROM stdin;
-6	2	loic	caissier	2024-05-05 14:52:31.051735
-236	45	test	admin	2024-05-01 23:30:18.408543
-321	3	andi	vendeur	2024-05-06 12:49:05.437867
-5	1	kim	admin	2024-05-06 13:02:46.771235
+321	3	andi	vendeur	2024-05-06 19:42:48.709942
+6	2	loic	caissier	2024-05-06 19:43:08.772265
+236	45	admin	admin	2024-05-12 19:20:38.754656
+5	1	kim	admin	2024-05-12 20:17:16.407516
 \.
 
 
 --
--- TOC entry 4951 (class 0 OID 16863)
--- Dependencies: 228
+-- TOC entry 4954 (class 0 OID 16863)
+-- Dependencies: 230
 -- Data for Name: medicament; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -804,8 +828,8 @@ COPY public.medicament (id_medicament, nom_medicament, description_medicament, i
 
 
 --
--- TOC entry 4940 (class 0 OID 16645)
--- Dependencies: 217
+-- TOC entry 4943 (class 0 OID 16645)
+-- Dependencies: 219
 -- Data for Name: utilisateurs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -813,13 +837,13 @@ COPY public.utilisateurs (id_utilisateur, nom_utilisateur, mot_de_passe, role, d
 3	andi	andi	vendeur	\N
 2	loic	loic	caissier	\N
 1	kim	kim	admin	\N
-45	test	test	admin	\N
+45	admin	admin	admin	\N
 \.
 
 
 --
--- TOC entry 4955 (class 0 OID 17123)
--- Dependencies: 232
+-- TOC entry 4958 (class 0 OID 17123)
+-- Dependencies: 234
 -- Data for Name: vente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -850,8 +874,8 @@ COPY public.vente (id_vente, id_client, type_vente, montant_total, date_vente, s
 
 
 --
--- TOC entry 4959 (class 0 OID 17316)
--- Dependencies: 236
+-- TOC entry 4962 (class 0 OID 17316)
+-- Dependencies: 238
 -- Data for Name: ventes_payees; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -865,8 +889,8 @@ COPY public.ventes_payees (id_vente_payee, id_vente, id_client, type_vente, mont
 
 
 --
--- TOC entry 4976 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 4979 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: approvisionnement_id_approvisionnement_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -874,8 +898,8 @@ SELECT pg_catalog.setval('public.approvisionnement_id_approvisionnement_seq', 21
 
 
 --
--- TOC entry 4977 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 4980 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: client_id_client_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -883,8 +907,8 @@ SELECT pg_catalog.setval('public.client_id_client_seq', 16, true);
 
 
 --
--- TOC entry 4978 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 4981 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: famille_id_famille_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -892,8 +916,8 @@ SELECT pg_catalog.setval('public.famille_id_famille_seq', 27, true);
 
 
 --
--- TOC entry 4979 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 4982 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: forme_id_forme_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -901,8 +925,8 @@ SELECT pg_catalog.setval('public.forme_id_forme_seq', 12, true);
 
 
 --
--- TOC entry 4980 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 4983 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: fournisseur_id_fournisseur_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -910,8 +934,8 @@ SELECT pg_catalog.setval('public.fournisseur_id_fournisseur_seq', 10, true);
 
 
 --
--- TOC entry 4981 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4984 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: ligne_vente_id_ligne_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -919,17 +943,17 @@ SELECT pg_catalog.setval('public.ligne_vente_id_ligne_vente_seq', 41, true);
 
 
 --
--- TOC entry 4982 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 4985 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: login_historique_id_login_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.login_historique_id_login_seq', 350, true);
+SELECT pg_catalog.setval('public.login_historique_id_login_seq', 355, true);
 
 
 --
--- TOC entry 4983 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 4986 (class 0 OID 0)
+-- Dependencies: 229
 -- Name: medicament_id_medicament_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -937,8 +961,8 @@ SELECT pg_catalog.setval('public.medicament_id_medicament_seq', 11, true);
 
 
 --
--- TOC entry 4984 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 4987 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: utilisateurs_id_utilisateur_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -946,8 +970,8 @@ SELECT pg_catalog.setval('public.utilisateurs_id_utilisateur_seq', 45, true);
 
 
 --
--- TOC entry 4985 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 4988 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: vente_id_vente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -955,8 +979,8 @@ SELECT pg_catalog.setval('public.vente_id_vente_seq', 22, true);
 
 
 --
--- TOC entry 4986 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4989 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: ventes_payees_id_vente_payee_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -964,7 +988,7 @@ SELECT pg_catalog.setval('public.ventes_payees_id_vente_payee_seq', 19, true);
 
 
 --
--- TOC entry 4778 (class 2606 OID 16897)
+-- TOC entry 4781 (class 2606 OID 16897)
 -- Name: approvisionnement approvisionnement_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -973,7 +997,7 @@ ALTER TABLE ONLY public.approvisionnement
 
 
 --
--- TOC entry 4762 (class 2606 OID 16658)
+-- TOC entry 4765 (class 2606 OID 16658)
 -- Name: client client_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -982,7 +1006,7 @@ ALTER TABLE ONLY public.client
 
 
 --
--- TOC entry 4766 (class 2606 OID 16684)
+-- TOC entry 4769 (class 2606 OID 16684)
 -- Name: famille famille_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -991,7 +1015,7 @@ ALTER TABLE ONLY public.famille
 
 
 --
--- TOC entry 4768 (class 2606 OID 16693)
+-- TOC entry 4771 (class 2606 OID 16693)
 -- Name: forme forme_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1000,7 +1024,7 @@ ALTER TABLE ONLY public.forme
 
 
 --
--- TOC entry 4774 (class 2606 OID 16861)
+-- TOC entry 4777 (class 2606 OID 16861)
 -- Name: fournisseur fournisseur_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1009,7 +1033,7 @@ ALTER TABLE ONLY public.fournisseur
 
 
 --
--- TOC entry 4782 (class 2606 OID 17140)
+-- TOC entry 4785 (class 2606 OID 17140)
 -- Name: ligne_vente ligne_vente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1018,7 +1042,7 @@ ALTER TABLE ONLY public.ligne_vente
 
 
 --
--- TOC entry 4770 (class 2606 OID 16720)
+-- TOC entry 4773 (class 2606 OID 16720)
 -- Name: login_historique login_historique_id_utilisateur_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1027,7 +1051,7 @@ ALTER TABLE ONLY public.login_historique
 
 
 --
--- TOC entry 4772 (class 2606 OID 16700)
+-- TOC entry 4775 (class 2606 OID 16700)
 -- Name: login_historique login_historique_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1036,7 +1060,7 @@ ALTER TABLE ONLY public.login_historique
 
 
 --
--- TOC entry 4776 (class 2606 OID 16871)
+-- TOC entry 4779 (class 2606 OID 16871)
 -- Name: medicament medicament_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1045,7 +1069,7 @@ ALTER TABLE ONLY public.medicament
 
 
 --
--- TOC entry 4764 (class 2606 OID 16662)
+-- TOC entry 4767 (class 2606 OID 16662)
 -- Name: utilisateurs utilisateurs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1054,7 +1078,7 @@ ALTER TABLE ONLY public.utilisateurs
 
 
 --
--- TOC entry 4780 (class 2606 OID 17128)
+-- TOC entry 4783 (class 2606 OID 17128)
 -- Name: vente vente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1063,7 +1087,7 @@ ALTER TABLE ONLY public.vente
 
 
 --
--- TOC entry 4784 (class 2606 OID 17321)
+-- TOC entry 4787 (class 2606 OID 17321)
 -- Name: ventes_payees ventes_payees_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1072,7 +1096,7 @@ ALTER TABLE ONLY public.ventes_payees
 
 
 --
--- TOC entry 4794 (class 2620 OID 16714)
+-- TOC entry 4797 (class 2620 OID 16714)
 -- Name: utilisateurs update_login_historique; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1080,7 +1104,7 @@ CREATE TRIGGER update_login_historique AFTER INSERT OR UPDATE ON public.utilisat
 
 
 --
--- TOC entry 4789 (class 2606 OID 16903)
+-- TOC entry 4792 (class 2606 OID 16903)
 -- Name: approvisionnement approvisionnement_id_fournisseur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1089,7 +1113,7 @@ ALTER TABLE ONLY public.approvisionnement
 
 
 --
--- TOC entry 4790 (class 2606 OID 16898)
+-- TOC entry 4793 (class 2606 OID 16898)
 -- Name: approvisionnement approvisionnement_id_medicament_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1098,7 +1122,7 @@ ALTER TABLE ONLY public.approvisionnement
 
 
 --
--- TOC entry 4792 (class 2606 OID 17146)
+-- TOC entry 4795 (class 2606 OID 17146)
 -- Name: ligne_vente ligne_vente_id_medicament_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1107,7 +1131,7 @@ ALTER TABLE ONLY public.ligne_vente
 
 
 --
--- TOC entry 4793 (class 2606 OID 17141)
+-- TOC entry 4796 (class 2606 OID 17141)
 -- Name: ligne_vente ligne_vente_id_vente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1116,7 +1140,7 @@ ALTER TABLE ONLY public.ligne_vente
 
 
 --
--- TOC entry 4785 (class 2606 OID 16701)
+-- TOC entry 4788 (class 2606 OID 16701)
 -- Name: login_historique login_historique_id_utilisateur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1125,7 +1149,7 @@ ALTER TABLE ONLY public.login_historique
 
 
 --
--- TOC entry 4786 (class 2606 OID 16877)
+-- TOC entry 4789 (class 2606 OID 16877)
 -- Name: medicament medicament_id_famille_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1134,7 +1158,7 @@ ALTER TABLE ONLY public.medicament
 
 
 --
--- TOC entry 4787 (class 2606 OID 16882)
+-- TOC entry 4790 (class 2606 OID 16882)
 -- Name: medicament medicament_id_forme_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1143,7 +1167,7 @@ ALTER TABLE ONLY public.medicament
 
 
 --
--- TOC entry 4788 (class 2606 OID 16872)
+-- TOC entry 4791 (class 2606 OID 16872)
 -- Name: medicament medicament_id_fournisseur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1152,7 +1176,7 @@ ALTER TABLE ONLY public.medicament
 
 
 --
--- TOC entry 4791 (class 2606 OID 17129)
+-- TOC entry 4794 (class 2606 OID 17129)
 -- Name: vente vente_id_client_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1160,7 +1184,7 @@ ALTER TABLE ONLY public.vente
     ADD CONSTRAINT vente_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client);
 
 
--- Completed on 2024-05-06 13:07:20
+-- Completed on 2024-05-12 23:55:31
 
 --
 -- PostgreSQL database dump complete
